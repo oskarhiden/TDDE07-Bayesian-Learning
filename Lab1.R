@@ -29,4 +29,27 @@ points(x=1:10000, y=rep(beta_std, 10000), type="l", col="red")
 
 
 #Assignment 1b
+count = ifelse (random_numbers > 0.3, 1, 0)
+count = sum(count);
+#compare
+posterior_prob = count/n
+exact_value = 1-pbeta(0.3, alpha, beta)
+posterior_prob
+exact_value
 
+#Assignment 1c
+log_ods = log(random_numbers/(1-random_numbers))
+samp = mean(log_ods)
+hist(log_ods)
+#fit a normal distribution
+fit = density(log_ods, kernel="gaussian")
+plot(fit)
+print(fit)
+#mean = -1,.2413
+#std = 1.0848
+
+#N_M = mean(fit[["x"]])
+#N_S = sqrt(var(fit[["x"]]))
+#N_M-N_S
+
+#Assignment 2a
