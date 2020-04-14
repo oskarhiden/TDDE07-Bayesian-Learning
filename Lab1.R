@@ -68,9 +68,31 @@ simulation
 x_draw = rchisq(10000,n)
 inv_chi = ((n)*tau)/x_draw
 
-fit_chi = density(inv_chi)
-plot(fit_chi)
+#fit_chi = density(inv_chi)
+#plot(fit_chi)
 
-test = dinvchisq(seq(0.02, 0.4, by=0.01), n, tau)
-plot(seq(0.02, 0.4, by=0.01),test, col="blue", type="l")
-points(fit_chi, type="l", col="red")
+#test = dinvchisq(seq(0.02, 0.4, by=0.01), n, tau)
+#plot(seq(0.02, 0.4, by=0.01),test, col="blue", type="l")
+#points(fit_chi, type="l", col="red")
+
+h=hist(inv_chi,breaks=100, plot=FALSE)
+h$counts=h$counts*50/sum(h$counts)
+plot(h, col="red",ylim=c(0,10))
+
+test = dinvchisq(seq(0.02, 1, by=0.01), n, tau)
+points(seq(0.02, 1, by=0.01),test,col="blue",type="l")
+
+#2b
+G = 2*pnorm(sqrt(inv_chi)/sqrt(2))-1
+hist(G, breaks=100)
+#plot(density(G))
+
+#2c
+#90% by sorting.
+sort_g = sort(G)
+low_tail = sort_g[length(G)*0.5]
+high_tail = sort_g[length(G)*0.95]
+c(low_tail, high_tail)
+
+fit_G = density(G)
+plot(fit_G)
