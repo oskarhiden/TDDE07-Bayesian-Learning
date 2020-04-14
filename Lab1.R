@@ -53,3 +53,24 @@ print(fit)
 #N_M-N_S
 
 #Assignment 2a
+y = c(44, 25, 45, 52, 30, 63, 19, 50, 34, 67)
+my = 3.7
+n=10
+tau = sum((log(y)-my)^2)/length(y)
+tau  
+
+#TEST
+library(LaplacesDemon)
+simulation = rinvchisq(10000, tau, scale = 1/10)
+simulation
+#END TEST
+
+x_draw = rchisq(10000,n)
+inv_chi = ((n)*tau)/x_draw
+
+fit_chi = density(inv_chi)
+plot(fit_chi)
+
+test = dinvchisq(seq(0.02, 0.4, by=0.01), n, tau)
+plot(seq(0.02, 0.4, by=0.01),test, col="blue", type="l")
+points(fit_chi, type="l", col="red")
