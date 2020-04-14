@@ -96,3 +96,6 @@ c(low_tail, high_tail)
 
 fit_G = density(G)
 plot(fit_G)
+
+library(HDInterval)
+hid_90 = hdi(fit_G, credMass=0.90)
