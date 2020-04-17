@@ -99,14 +99,36 @@ plot(fit_G)
 
 library(HDInterval)
 hid_90 = hdi(fit_G, credMass=0.90)
-
+hid_90
 
 #3a
 wind_d = c(40, 303, 326, 285, 296, 314, 20, 308, 299, 296)
 wind_r = c(-2.44, 2.14, 2.54, 1.83, 2.02, 2.33, -2.79, 2.23, 2.07, 2.02)
 
-?Bessel
-k=seq(0.01, 10, by=0.01) #exp(lambda=1) as prior for k
+#?Bessel
+k=seq(0.01, 7, by=0.01) #exp(lambda=1) as prior for k
 my=2.39
-p_y = exp(k*cos(wind_r-my))/(2*pi*besselI(k,0))*dexp(k)
-plot(k,p_y)
+#mises_distr =exp(k*cos(wind_r-my))/(2*pi*besselI(k,0)) 
+p_y = rep(0, length(k))
+for(i in 1:length(k)){
+  p_y[i] = prod(exp(k[i]*cos(wind_r-my))/(2*pi*besselI(k[i],0)) )*dexp(k[i])
+}
+
+plot(k,p_y, type="l")
+
+#3b
+
+k[which.max(p_y)]
+
+
+
+#Shit
+k_d = 1.5
+my_d = 2.16
+x = seq(0.01, 7, by=0.01)
+y = exp(k_d*cos(x-my_d))/(2*pi*besselI(k_d,0))
+#y = (y/1.64*1.12)*10^-5
+#points(x,y, type="l", col="blue")
+par(new=TRUE)
+plot(x,y, type="l", col="blue")
+#end Shit
