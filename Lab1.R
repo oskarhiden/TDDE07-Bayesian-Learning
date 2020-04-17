@@ -99,3 +99,14 @@ plot(fit_G)
 
 library(HDInterval)
 hid_90 = hdi(fit_G, credMass=0.90)
+
+
+#3a
+wind_d = c(40, 303, 326, 285, 296, 314, 20, 308, 299, 296)
+wind_r = c(-2.44, 2.14, 2.54, 1.83, 2.02, 2.33, -2.79, 2.23, 2.07, 2.02)
+
+?Bessel
+k=seq(0.01, 10, by=0.01) #exp(lambda=1) as prior for k
+my=2.39
+p_y = exp(k*cos(wind_r-my))/(2*pi*besselI(k,0))*dexp(k)
+plot(k,p_y)
