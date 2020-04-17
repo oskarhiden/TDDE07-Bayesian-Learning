@@ -1,0 +1,367 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{hyperref}
+\hypersetup{
+            pdftitle={Lab 1},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+\title{Lab 1}
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+\maketitle
+
+\hypertarget{part-1}{%
+\subsection{Part 1}\label{part-1}}
+
+\hypertarget{a}{%
+\subsubsection{a)}\label{a}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{post_beta =}\StringTok{ }\DecValTok{2}\NormalTok{;}
+\NormalTok{post_alpha =}\StringTok{ }\DecValTok{2}\NormalTok{;}
+\NormalTok{s =}\StringTok{ }\DecValTok{5}
+\NormalTok{f=}\StringTok{ }\DecValTok{20}\OperatorTok{-}\NormalTok{s}
+\NormalTok{alpha =}\StringTok{ }\NormalTok{post_alpha}\OperatorTok{+}\NormalTok{s}
+\NormalTok{beta =}\StringTok{ }\NormalTok{post_beta}\OperatorTok{+}\NormalTok{f}
+
+\NormalTok{beta_mean =}\StringTok{ }\NormalTok{(alpha)}\OperatorTok{/}\NormalTok{(alpha}\OperatorTok{+}\NormalTok{beta);}
+\NormalTok{beta_std =}\StringTok{ }\KeywordTok{sqrt}\NormalTok{((alpha}\OperatorTok{*}\NormalTok{beta)}\OperatorTok{/}\NormalTok{(((alpha}\OperatorTok{+}\NormalTok{beta)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}\OperatorTok{*}\NormalTok{(alpha}\OperatorTok{+}\NormalTok{beta}\OperatorTok{+}\DecValTok{1}\NormalTok{)))}
+
+\NormalTok{n =}\StringTok{ }\DecValTok{100000}
+\NormalTok{random_numbers =}\StringTok{ }\KeywordTok{rbeta}\NormalTok{(n, alpha, beta)}
+\KeywordTok{hist}\NormalTok{(random_numbers, }\DataTypeTok{breaks =} \DecValTok{50}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Labreport-1_files/figure-latex/1a-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mean_value =}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{10000}\NormalTok{)}
+\NormalTok{std_value =}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{10000}\NormalTok{)}
+
+\ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{10000}\NormalTok{)\{}
+\NormalTok{  mean_value[i] =}\StringTok{ }\KeywordTok{mean}\NormalTok{(random_numbers[}\DecValTok{1}\OperatorTok{:}\NormalTok{i])}
+\NormalTok{  std_value[i] =}\KeywordTok{sqrt}\NormalTok{(}\KeywordTok{var}\NormalTok{(random_numbers[}\DecValTok{1}\OperatorTok{:}\NormalTok{i]))}
+\NormalTok{\}}
+
+\KeywordTok{plot}\NormalTok{(mean_value, }\DataTypeTok{type=}\StringTok{"l"}\NormalTok{)}
+\KeywordTok{points}\NormalTok{(}\DataTypeTok{x=}\DecValTok{1}\OperatorTok{:}\DecValTok{10000}\NormalTok{, }\DataTypeTok{y=}\KeywordTok{rep}\NormalTok{(beta_mean,}\DecValTok{10000}\NormalTok{), }\DataTypeTok{type =} \StringTok{"l"}\NormalTok{, }\DataTypeTok{col=}\StringTok{"red"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Labreport-1_files/figure-latex/1a-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(std_value, }\DataTypeTok{type=}\StringTok{"l"}\NormalTok{)}
+\KeywordTok{points}\NormalTok{(}\DataTypeTok{x=}\DecValTok{1}\OperatorTok{:}\DecValTok{10000}\NormalTok{, }\DataTypeTok{y=}\KeywordTok{rep}\NormalTok{(beta_std, }\DecValTok{10000}\NormalTok{), }\DataTypeTok{type=}\StringTok{"l"}\NormalTok{, }\DataTypeTok{col=}\StringTok{"red"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Labreport-1_files/figure-latex/1a-3.pdf}
+
+\hypertarget{b}{%
+\subsubsection{b)}\label{b}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{count =}\StringTok{ }\KeywordTok{ifelse}\NormalTok{ (random_numbers }\OperatorTok{>}\StringTok{ }\FloatTok{0.3}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{)}
+\NormalTok{count =}\StringTok{ }\KeywordTok{sum}\NormalTok{(count);}
+\CommentTok{#compare}
+\NormalTok{posterior_prob =}\StringTok{ }\NormalTok{count}\OperatorTok{/}\NormalTok{n}
+\NormalTok{exact_value =}\StringTok{ }\DecValTok{1}\OperatorTok{-}\KeywordTok{pbeta}\NormalTok{(}\FloatTok{0.3}\NormalTok{, alpha, beta)}
+\NormalTok{posterior_prob}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.43939
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{exact_value}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.4399472
+\end{verbatim}
+
+\hypertarget{c}{%
+\subsubsection{c)}\label{c}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{log_ods =}\StringTok{ }\KeywordTok{log}\NormalTok{(random_numbers}\OperatorTok{/}\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{random_numbers))}
+\NormalTok{samp =}\StringTok{ }\KeywordTok{mean}\NormalTok{(log_ods)}
+\KeywordTok{hist}\NormalTok{(log_ods)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Labreport-1_files/figure-latex/1c-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fit =}\StringTok{ }\KeywordTok{density}\NormalTok{(log_ods, }\DataTypeTok{kernel=}\StringTok{"gaussian"}\NormalTok{)}
+\KeywordTok{plot}\NormalTok{(fit)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Labreport-1_files/figure-latex/1c-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(fit)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+##  density.default(x = log_ods, kernel = "gaussian")
+## 
+## Data: log_ods (100000 obs.); Bandwidth 'bw' = 0.04116
+## 
+##        x                 y           
+##  Min.   :-3.2605   Min.   :0.000000  
+##  1st Qu.:-2.1165   1st Qu.:0.001127  
+##  Median :-0.9726   Median :0.041564  
+##  Mean   :-0.9726   Mean   :0.218326  
+##  3rd Qu.: 0.1714   3rd Qu.:0.392100  
+##  Max.   : 1.3153   Max.   :0.885309
+\end{verbatim}
+
+\hypertarget{part-2}{%
+\subsection{Part 2}\label{part-2}}
+
+\hypertarget{a-1}{%
+\subsubsection{a)}\label{a-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{44}\NormalTok{, }\DecValTok{25}\NormalTok{, }\DecValTok{45}\NormalTok{, }\DecValTok{52}\NormalTok{, }\DecValTok{30}\NormalTok{, }\DecValTok{63}\NormalTok{, }\DecValTok{19}\NormalTok{, }\DecValTok{50}\NormalTok{, }\DecValTok{34}\NormalTok{, }\DecValTok{67}\NormalTok{)}
+\NormalTok{my =}\StringTok{ }\FloatTok{3.7}
+\NormalTok{n=}\DecValTok{10}
+\NormalTok{tau =}\StringTok{ }\KeywordTok{sum}\NormalTok{((}\KeywordTok{log}\NormalTok{(y)}\OperatorTok{-}\NormalTok{my)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}\OperatorTok{/}\KeywordTok{length}\NormalTok{(y)}
+\NormalTok{tau  }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.1499412
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x_draw =}\StringTok{ }\KeywordTok{rchisq}\NormalTok{(}\DecValTok{10000}\NormalTok{,n)}
+\NormalTok{post_draws =}\StringTok{ }\NormalTok{((n)}\OperatorTok{*}\NormalTok{tau)}\OperatorTok{/}\NormalTok{x_draw }\CommentTok{#scaled inv chi 2}
+
+\NormalTok{h=}\KeywordTok{hist}\NormalTok{(post_draws,}\DataTypeTok{breaks=}\DecValTok{100}\NormalTok{, }\DataTypeTok{plot=}\OtherTok{FALSE}\NormalTok{)}
+\NormalTok{h}\OperatorTok{$}\NormalTok{counts=h}\OperatorTok{$}\NormalTok{counts}\OperatorTok{*}\DecValTok{50}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(h}\OperatorTok{$}\NormalTok{counts)}
+\KeywordTok{plot}\NormalTok{(h, }\DataTypeTok{col=}\StringTok{"red"}\NormalTok{,}\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{10}\NormalTok{))}
+
+\KeywordTok{library}\NormalTok{(LaplacesDemon)}
+\NormalTok{scaled_inv_chi_}\DecValTok{2}\NormalTok{ =}\StringTok{ }\KeywordTok{dinvchisq}\NormalTok{(}\KeywordTok{seq}\NormalTok{(}\FloatTok{0.02}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DataTypeTok{by=}\FloatTok{0.01}\NormalTok{), n, tau)}
+\KeywordTok{points}\NormalTok{(}\KeywordTok{seq}\NormalTok{(}\FloatTok{0.02}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DataTypeTok{by=}\FloatTok{0.01}\NormalTok{),scaled_inv_chi_}\DecValTok{2}\NormalTok{,}\DataTypeTok{col=}\StringTok{"blue"}\NormalTok{,}\DataTypeTok{type=}\StringTok{"l"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Labreport-1_files/figure-latex/2a-1.pdf}
+
+\hypertarget{b-1}{%
+\subsubsection{b)}\label{b-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{G =}\StringTok{ }\DecValTok{2}\OperatorTok{*}\KeywordTok{pnorm}\NormalTok{(}\KeywordTok{sqrt}\NormalTok{(post_draws)}\OperatorTok{/}\KeywordTok{sqrt}\NormalTok{(}\DecValTok{2}\NormalTok{))}\OperatorTok{-}\DecValTok{1}
+\KeywordTok{hist}\NormalTok{(G, }\DataTypeTok{breaks=}\DecValTok{100}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Labreport-1_files/figure-latex/2b-1.pdf}
+
+\hypertarget{c-1}{%
+\subsubsection{c)}\label{c-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sort_g =}\StringTok{ }\KeywordTok{sort}\NormalTok{(G)}
+\NormalTok{low_tail =}\StringTok{ }\NormalTok{sort_g[}\KeywordTok{length}\NormalTok{(G)}\OperatorTok{*}\FloatTok{0.5}\NormalTok{]}
+\NormalTok{high_tail =}\StringTok{ }\NormalTok{sort_g[}\KeywordTok{length}\NormalTok{(G)}\OperatorTok{*}\FloatTok{0.95}\NormalTok{]}
+\KeywordTok{c}\NormalTok{(low_tail, high_tail)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.2230007 0.3403170
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fit_G =}\StringTok{ }\KeywordTok{density}\NormalTok{(G)}
+\KeywordTok{plot}\NormalTok{(fit_G)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Labreport-1_files/figure-latex/2c-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(HDInterval)}
+\NormalTok{hid_}\DecValTok{90}\NormalTok{ =}\StringTok{ }\KeywordTok{hdi}\NormalTok{(fit_G, }\DataTypeTok{credMass=}\FloatTok{0.90}\NormalTok{)}
+\NormalTok{hid_}\DecValTok{90}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     lower     upper 
+## 0.1471999 0.3149499 
+## attr(,"credMass")
+## [1] 0.9
+## attr(,"height")
+## [1] 1.677413
+\end{verbatim}
+
+\hypertarget{part-3}{%
+\subsection{Part 3}\label{part-3}}
+
+\hypertarget{b-2}{%
+\subsubsection{b)}\label{b-2}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{wind_d =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{40}\NormalTok{, }\DecValTok{303}\NormalTok{, }\DecValTok{326}\NormalTok{, }\DecValTok{285}\NormalTok{, }\DecValTok{296}\NormalTok{, }\DecValTok{314}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{308}\NormalTok{, }\DecValTok{299}\NormalTok{, }\DecValTok{296}\NormalTok{)}
+\NormalTok{wind_r =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\OperatorTok{-}\FloatTok{2.44}\NormalTok{, }\FloatTok{2.14}\NormalTok{, }\FloatTok{2.54}\NormalTok{, }\FloatTok{1.83}\NormalTok{, }\FloatTok{2.02}\NormalTok{, }\FloatTok{2.33}\NormalTok{, }\FloatTok{-2.79}\NormalTok{, }\FloatTok{2.23}\NormalTok{, }\FloatTok{2.07}\NormalTok{, }\FloatTok{2.02}\NormalTok{)}
+
+\CommentTok{#?Bessel}
+\NormalTok{k=}\KeywordTok{seq}\NormalTok{(}\FloatTok{0.01}\NormalTok{, }\DecValTok{7}\NormalTok{, }\DataTypeTok{by=}\FloatTok{0.01}\NormalTok{) }\CommentTok{#exp(lambda=1) as prior for k}
+\NormalTok{my=}\FloatTok{2.39}
+\CommentTok{#mises_distr =exp(k*cos(wind_r-my))/(2*pi*besselI(k,0)) }
+\NormalTok{p_y =}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, }\KeywordTok{length}\NormalTok{(k))}
+\ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(k))\{}
+\NormalTok{  p_y[i] =}\StringTok{ }\KeywordTok{prod}\NormalTok{(}\KeywordTok{exp}\NormalTok{(k[i]}\OperatorTok{*}\KeywordTok{cos}\NormalTok{(wind_r}\OperatorTok{-}\NormalTok{my))}\OperatorTok{/}\NormalTok{(}\DecValTok{2}\OperatorTok{*}\NormalTok{pi}\OperatorTok{*}\KeywordTok{besselI}\NormalTok{(k[i],}\DecValTok{0}\NormalTok{)) )}\OperatorTok{*}\KeywordTok{dexp}\NormalTok{(k[i])}
+\NormalTok{\}}
+\KeywordTok{plot}\NormalTok{(k,p_y, }\DataTypeTok{type=}\StringTok{"l"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Labreport-1_files/figure-latex/3a-1.pdf}
+
+\hypertarget{b-3}{%
+\subsubsection{b)}\label{b-3}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#find mode: moest frequent value of k. }
+\NormalTok{k[}\KeywordTok{which.max}\NormalTok{(p_y)]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2.12
+\end{verbatim}
+
+\end{document}
