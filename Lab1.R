@@ -41,16 +41,11 @@ exact_value
 log_ods = log(random_numbers/(1-random_numbers))
 samp = mean(log_ods)
 hist(log_ods)
-#fit a normal distribution
 fit = density(log_ods, kernel="gaussian")
 plot(fit)
 print(fit)
 #mean = -1,.2413
 #std = 1.0848
-
-#N_M = mean(fit[["x"]])
-#N_S = sqrt(var(fit[["x"]]))
-#N_M-N_S
 
 #Assignment 2a
 y = c(44, 25, 45, 52, 30, 63, 19, 50, 34, 67)
@@ -59,21 +54,10 @@ n=10
 tau = sum((log(y)-my)^2)/length(y)
 tau  
 
-#TEST
 library(LaplacesDemon)
-simulation = rinvchisq(10000, tau, scale = 1/10)
-simulation
-#END TEST
 
 x_draw = rchisq(10000,n)
 inv_chi = ((n)*tau)/x_draw
-
-#fit_chi = density(inv_chi)
-#plot(fit_chi)
-
-#test = dinvchisq(seq(0.02, 0.4, by=0.01), n, tau)
-#plot(seq(0.02, 0.4, by=0.01),test, col="blue", type="l")
-#points(fit_chi, type="l", col="red")
 
 h=hist(inv_chi,breaks=100, plot=FALSE)
 h$counts=h$counts*50/sum(h$counts)
@@ -113,22 +97,8 @@ p_y = rep(0, length(k))
 for(i in 1:length(k)){
   p_y[i] = prod(exp(k[i]*cos(wind_r-my))/(2*pi*besselI(k[i],0)) )*dexp(k[i])
 }
-
 plot(k,p_y, type="l")
 
 #3b
-
+#find mode: moest frequent value of k. 
 k[which.max(p_y)]
-
-
-
-#Shit
-k_d = 1.5
-my_d = 2.16
-x = seq(0.01, 7, by=0.01)
-y = exp(k_d*cos(x-my_d))/(2*pi*besselI(k_d,0))
-#y = (y/1.64*1.12)*10^-5
-#points(x,y, type="l", col="blue")
-par(new=TRUE)
-plot(x,y, type="l", col="blue")
-#end Shit
