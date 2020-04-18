@@ -58,7 +58,7 @@ exact_value
 ```
 
 ### c)
-Compute the posterior distribution of the log-odds $\phi = log \theta$ by simulation $1−\theta$
+Compute the posterior distribution of the log-odds $\phi = log \theta$ by simulation $1-\theta$
 (nDraws = 10000). [Hint: hist() and density() might come in handy]
 ```{r 1c}
 log_ods = log(random_numbers/(1-random_numbers))
@@ -74,12 +74,12 @@ Log-normal distribution and the Gini coefficient.
 Assume that you have asked 10 randomly selected persons about their monthly in- come (in thousands Swedish Krona) and obtained the following ten observations: 44, 25, 45, 52, 30, 63, 19, 50, 34 and 67. A common model for non-negative continuous variables is the log-normal distribution. The log-normal distribution $\log{\mathcal{N}(\mu,\,\sigma^{2})}\,$ has density function
 
 $$p(y|\mu,\sigma )= \frac{1}{y\sqrt{2\pi\sigma^{2}}}\exp(-\frac{1}{2\sigma^{2}}(log(y)-\mu)^2) $$
-for $y > 0$, $\mu > 0$ and $\sigma^2 > 0$. The log-normal distribution is related to the normal distribution as follows: if $y \sim \log{\mathcal{N}(\mu,\,\sigma^{2})}\,.$ then $\log{y} \sim \mathcal{N}(\mu,\,\sigma^{2})\,.$ Let $y_{1},...y_{n}|\mu,\sigma^{2}\sim\log{\mathcal{N}(\mu, \sigma^{2})}$, where $\mu = 3.7$ is assumed to be known but $\sigma$ is unknown with non-informative prior $p(\sigma) \propto 1/\sigma$ . The posterior for $\sigma$ is the $Inv−χ^2(n,\tau^2)$ distribution, where
+for $y > 0$, $\mu > 0$ and $\sigma^2 > 0$. The log-normal distribution is related to the normal distribution as follows: if $y \sim \log{\mathcal{N}(\mu,\,\sigma^{2})}\,.$ then $\log{y} \sim \mathcal{N}(\mu,\,\sigma^{2})\,.$ Let $y_{1},...y_{n}|\mu,\sigma^{2}\sim\log{\mathcal{N}(\mu, \sigma^{2})}$, where $\mu = 3.7$ is assumed to be known but $\sigma$ is unknown with non-informative prior $p(\sigma) \propto 1/\sigma$ . The posterior for $\sigma$ is the $Inv-\chi^2(n,\tau^2)$ distribution, where
 
 $$\tau^{2} = \frac{\sum_{i=1}^{n}\left(\log{y_{i}} - \bar{y}\right)^{2}}{n}$$
 
 ### a)
-Simulate 10, 000 draws from the posterior of $\sigma^2$ (assuming $\mu = 3.7$) and compare with the theoretical $Inv−χ^2(n,\tau^2)$ posterior distribution.
+Simulate 10, 000 draws from the posterior of $\sigma^2$ (assuming $\mu = 3.7$) and compare with the theoretical $Inv-\chi^2(n,\tau^2)$ posterior distribution.
 ```{r 2a}
 y = c(44, 25, 45, 52, 30, 63, 19, 50, 34, 67)
 my = 3.7
@@ -100,7 +100,7 @@ points(seq(0.02, 1, by=0.01),scaled_inv_chi_2,col="blue",type="l")
 ```
 
 ### b)
-The most common measure of income inequality is the Gini coefficient, G, where 0 ≤ G ≤ 1. G = 0 means a completely equal income distribution, whereas G = 1 means complete income inequality. See Wikipedia for more information. It can be shown that $G = 2\phi(\sigma/\sqrt{2})-1$ when incomes follow a $\log{\mathcal{N}(\mu,\,\sigma^{2})}\,$ distribution. $\phi(z)$ is the cumulative distribution function (CDF) for the standard normal distribution with mean zero and unit variance. Use the posterior draws in a) to compute the posterior distribution of the Gini coefficient G for the current data set.
+The most common measure of income inequality is the Gini coefficient, G, where $0 \le G \le 1$. G = 0 means a completely equal income distribution, whereas G = 1 means complete income inequality. See Wikipedia for more information. It can be shown that $G = 2\phi(\sigma/\sqrt{2})-1$ when incomes follow a $\log{\mathcal{N}(\mu,\,\sigma^{2})}\,$ distribution. $\phi(z)$ is the cumulative distribution function (CDF) for the standard normal distribution with mean zero and unit variance. Use the posterior draws in a) to compute the posterior distribution of the Gini coefficient G for the current data set.
 
 ```{r 2b}
 G = 2*pnorm(sqrt(post_draws)/sqrt(2))-1
@@ -128,19 +128,19 @@ Bayesian inference for the concentration parameter in the von Mises distribution
 
 $$(40, 303, 326, 285, 296, 314, 20, 308, 299, 296),$$
 
-where North is located at zero degrees (see Figure 1 on the next page, where the angles are measured clockwise). To fit with Wikipedias description of probability distributions for circular data we convert the data into radians $−\pi < y ≤ \pi$. The 10 observations in radians are
+where North is located at zero degrees (see Figure 1 on the next page, where the angles are measured clockwise). To fit with Wikipedias description of probability distributions for circular data we convert the data into radians $-\pi < y \le \pi$. The 10 observations in radians are
 
-$$(−2.44, 2.14, 2.54, 1.83, 2.02, 2.33, −2.79, 2.23, 2.07, 2.02).$$
+$$(-2.44, 2.14, 2.54, 1.83, 2.02, 2.33, -2.79, 2.23, 2.07, 2.02).$$
 
 Assume that these data points are independent observations following the von Mises
 distribution
 
-$$p(y|\mu, κ) = \frac{exp [κ · cos(y − \mu)]}{2\pi I_0(κ)}, −\pi ≤ y ≤ \pi $$
+$$p(y|\mu, k) = \frac{exp [k\cdot cos(y - \mu)]}{2\pi I_0(k)}, -\pi \le y \le \pi $$
 
- where $I_0(κ)$ is the modified Bessel function of the first kind of order zero [see ?besselI in R]. The parameter μ $(−\pi ≤ \mu ≤ \pi)$ is the mean direction and $κ > 0$ is called the concentration parameter. Large κ gives a small variance around μ, and vice versa. Assume that $\mu$ is known to be 2.39. Let $κ \sim Exponential(\lambda = 1)$ a priori, where $\lambda$ is the rate parameter of the exponential distribution (so that the mean is $1/\lambda$).
+ where $I_0(k)$ is the modified Bessel function of the first kind of order zero [see ?besselI in R]. The parameter $\mu\  (-\pi \le \mu \le \pi)$ is the mean direction and $k > 0$ is called the concentration parameter. Large k gives a small variance around $\mu$, and vice versa. Assume that $\mu$ is known to be 2.39. Let $k \sim Exponential(\lambda = 1)$ a priori, where $\lambda$ is the rate parameter of the exponential distribution (so that the mean is $1/\lambda$).
 
 ### a)
-Plot the posterior distribution of κ for the wind direction data over a fine grid of κ values.
+Plot the posterior distribution of k for the wind direction data over a fine grid of k values.
 ```{r 3a}
 wind_d = c(40, 303, 326, 285, 296, 314, 20, 308, 299, 296)
 wind_r = c(-2.44, 2.14, 2.54, 1.83, 2.02, 2.33, -2.79, 2.23, 2.07, 2.02)
@@ -158,7 +158,7 @@ plot(k,p_y, type="l")
 
 
 ###b)
-Find the (approximate) posterior mode of κ from the information in a).
+Find the (approximate) posterior mode of k from the information in a).
 ```{r 3b}
 #find mode: moest frequent value of k. 
 k[which.max(p_y)]
