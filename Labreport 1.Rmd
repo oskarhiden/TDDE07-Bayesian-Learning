@@ -1,8 +1,8 @@
 ---
 title: "Lab 1"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
   word_document: default
 ---
 
@@ -12,9 +12,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Part 1
 Bernoulli ... again.
-Let y1, ..., yn|θ ∼ Bern(θ), and assume that you have obtained a sample with s = 5 successes in n = 20 trials. Assume a Beta(α0, β0) prior for θ and let α0 = β0 = 2.
+Let $y_1, ..., y_n|\theta \sim Bern(\theta)$, and assume that you have obtained a sample with s = 5 successes in n = 20 trials. Assume a $Beta(\alpha_0, \beta_0)$ prior for $\theta$ and let $\beta_0 = \alpha_0 = 2$.
+
 ### a)
-Draw random numbers from the posterior θ|y ∼ Beta(α0 + s, β0 + f ), y = (y1,...,yn), and verify graphically that the posterior mean and standard de- viation converges to the true values as the number of random draws grows large.
+Draw random numbers from the posterior $\theta|y \sim Beta(\alpha_0 + s, \beta_0 + f )$, $y = (y_1,...,y_n)$, and verify graphically that the posterior mean and standard deviation converges to the true values as the number of random draws grows large.
 ```{r 1a}
 post_beta = 2;
 post_alpha = 2;
@@ -45,7 +46,7 @@ points(x=1:10000, y=rep(beta_std, 10000), type="l", col="red")
 ```
 
 ### b)
-Use simulation (nDraws = 10000) to compute the posterior probability Pr(θ > 0.3|y) and compare with the exact value [Hint: pbeta()].
+Use simulation (nDraws = 10000) to compute the posterior probability $Pr(\theta > 0.3|y)$ and compare with the exact value [Hint: pbeta()].
 ```{r 1b}
 count = ifelse (random_numbers > 0.3, 1, 0)
 count = sum(count);
@@ -57,7 +58,7 @@ exact_value
 ```
 
 ### c)
-Compute the posterior distribution of the log-odds φ = log θ by simulation 1−θ
+Compute the posterior distribution of the log-odds $\phi = log \theta$ by simulation $1−\theta$
 (nDraws = 10000). [Hint: hist() and density() might come in handy]
 ```{r 1c}
 log_ods = log(random_numbers/(1-random_numbers))
@@ -70,17 +71,15 @@ print(fit)
 
 ## Part 2
 Log-normal distribution and the Gini coefficient.
-Assume that you have asked 10 randomly selected persons about their monthly in- come (in thousands Swedish Krona) and obtained the following ten observations: 44, 25, 45, 52, 30, 63, 19, 50, 34 and 67. A common model for non-negative continuous variables is the log-normal distribution. The log-normal distribution logN(μ,σ2) has density function
+Assume that you have asked 10 randomly selected persons about their monthly in- come (in thousands Swedish Krona) and obtained the following ten observations: 44, 25, 45, 52, 30, 63, 19, 50, 34 and 67. A common model for non-negative continuous variables is the log-normal distribution. The log-normal distribution $\log{\mathcal{N}(\mu,\,\sigma^{2})}\,$ has density function
 
-p(y|μ,σ )= $\frac{1}{y\sqrt{}}$√ exp − y· 2πσ2(logy−μ) ,
+$$p(y|\mu,\sigma )= \frac{1}{y\sqrt{2\pi\sigma^{2}}}\exp(-\frac{1}{2\sigma^{2}}(log(y)-\mu)^2) $$
+for $y > 0$, $\mu > 0$ and $\sigma^2 > 0$. The log-normal distribution is related to the normal distribution as follows: if $y \sim \log{\mathcal{N}(\mu,\,\sigma^{2})}\,.$ then $\log{y} \sim \mathcal{N}(\mu,\,\sigma^{2})\,.$ Let $y_{1},...y_{n}|\mu,\sigma^{2}\sim\log{\mathcal{N}(\mu, \sigma^{2})}$, where $\mu = 3.7$ is assumed to be known but $\sigma$ is unknown with non-informative prior $p(\sigma) \propto 1/\sigma$ . The posterior for $\sigma$ is the $Inv−χ^2(n,\tau^2)$ distribution, where
 
-for y > 0, μ > 0 and σ2 > 0. The log-normal distribution is related to the normal distribution as follows: if y ∼ log N (μ, σ2) then log y
-2iid y1,...,yn|μ,σ ∼ logN(μ,σ ), where μ = 3.7 is assumed to be known but σ is
-unknown with non-informative prior p(σ ) ∝ 1/σ . The posterior for σ is the Inv−χ2(n,τ2) distribution, where
+$$\tau^{2} = \frac{\sum_{i=1}^{n}\left(\log{y_{i}} - \bar{y}\right)^{2}}{n}$$
 
-2 􏰄ni=1(log yi − μ)2 τ=n.
 ### a)
-Simulate 10, 000 draws from the posterior of σ2 (assuming μ = 3.7) and com- pare with the theoretical Inv−χ2(n,τ2) posterior distribution.
+Simulate 10, 000 draws from the posterior of $\sigma^2$ (assuming $\mu = 3.7$) and compare with the theoretical $Inv−χ^2(n,\tau^2)$ posterior distribution.
 ```{r 2a}
 y = c(44, 25, 45, 52, 30, 63, 19, 50, 34, 67)
 my = 3.7
@@ -101,7 +100,8 @@ points(seq(0.02, 1, by=0.01),scaled_inv_chi_2,col="blue",type="l")
 ```
 
 ### b)
-The most common measure of income inequality is the Gini coefficient, G, where 0 ≤ G ≤ 1. G = 0 means a completely equal income distribution, whereas G = 1 means complete income inequality. See Wikipedia for more information. It can be shown that G = 2Φ 􏰀σ/√2􏰁 − 1 when incomes follow a log N (μ, σ2) distribution. Φ(z) is the cumulative distribution function (CDF) for the standard normal distribution with mean zero and unit variance. Use the posterior draws in a) to compute the posterior distribution of the Gini coefficient G for the current data set.
+The most common measure of income inequality is the Gini coefficient, G, where 0 ≤ G ≤ 1. G = 0 means a completely equal income distribution, whereas G = 1 means complete income inequality. See Wikipedia for more information. It can be shown that $G = 2\phi(\sigma/\sqrt{2})-1$ when incomes follow a $\log{\mathcal{N}(\mu,\,\sigma^{2})}\,$ distribution. $\phi(z)$ is the cumulative distribution function (CDF) for the standard normal distribution with mean zero and unit variance. Use the posterior draws in a) to compute the posterior distribution of the Gini coefficient G for the current data set.
+
 ```{r 2b}
 G = 2*pnorm(sqrt(post_draws)/sqrt(2))-1
 hist(G, breaks=100)
@@ -109,7 +109,7 @@ hist(G, breaks=100)
 
 ### c)
 Use the posterior draws from b) to compute a 90% equal tail credible interval for G. A 90% equal tail interval (a,b) cuts off 5% percent of the posterior probability mass to the left of a, and 5% to the right of b. Also, do a kernel density estimate of the posterior of G using the density function in R with default settings, and use that kernel density estimate to compute a 90% Highest Posterior Density interval for G. Compare the two intervals.
-```{r 2c}
+```{r 2c, r G}
 sort_g = sort(G)
 low_tail = sort_g[length(G)*0.5]
 high_tail = sort_g[length(G)*0.95]
@@ -126,18 +126,19 @@ hid_90
 ## Part 3
 Bayesian inference for the concentration parameter in the von Mises distribution. This exercise is concerned with directional data. The point is to show you that the posterior distribution for somewhat weird models can be obtained by plotting it over a grid of values. The data points are observed wind directions at a given location on ten different days. The data are recorded in degrees: 
 
-(40, 303, 326, 285, 296, 314, 20, 308, 299, 296),
+$$(40, 303, 326, 285, 296, 314, 20, 308, 299, 296),$$
 
-where North is located at zero degrees (see Figure 1 on the next page, where the angles are measured clockwise). To fit with Wikipedias description of probability distributions for circular data we convert the data into radians −π ≤ y ≤ π . The 10 observations in radians are
+where North is located at zero degrees (see Figure 1 on the next page, where the angles are measured clockwise). To fit with Wikipedias description of probability distributions for circular data we convert the data into radians $−\pi < y ≤ \pi$. The 10 observations in radians are
 
-(−2.44, 2.14, 2.54, 1.83, 2.02, 2.33, −2.79, 2.23, 2.07, 2.02).
+$$(−2.44, 2.14, 2.54, 1.83, 2.02, 2.33, −2.79, 2.23, 2.07, 2.02).$$
 
 Assume that these data points are independent observations following the von Mises
 distribution
 
-p(y|μ, κ) = exp [κ · cos(y − μ)], −π ≤ y ≤ π, 2πI0(κ)
+$$p(y|\mu, κ) = \frac{exp [κ · cos(y − \mu)]}{2\pi I_0(κ)}, −\pi ≤ y ≤ \pi $$
 
- where I0(κ) is the modified Bessel function of the first kind of order zero [see ?besselI in R]. The parameter μ (−π ≤ μ ≤ π) is the mean direction and κ > 0 is called the concentration parameter. Large κ gives a small variance around μ, and vice versa. Assume that μ is known to be 2.39. Let κ ∼ Exponential(λ = 1) a priori, where λ is the rate parameter of the exponential distribution (so that the mean is 1/λ).
+ where $I_0(κ)$ is the modified Bessel function of the first kind of order zero [see ?besselI in R]. The parameter μ $(−\pi ≤ \mu ≤ \pi)$ is the mean direction and $κ > 0$ is called the concentration parameter. Large κ gives a small variance around μ, and vice versa. Assume that $\mu$ is known to be 2.39. Let $κ \sim Exponential(\lambda = 1)$ a priori, where $\lambda$ is the rate parameter of the exponential distribution (so that the mean is $1/\lambda$).
+
 ### a)
 Plot the posterior distribution of κ for the wind direction data over a fine grid of κ values.
 ```{r 3a}
@@ -155,7 +156,8 @@ for(i in 1:length(k)){
 plot(k,p_y, type="l")
 ```
 
-### b)
+
+###b)
 Find the (approximate) posterior mode of κ from the information in a).
 ```{r 3b}
 #find mode: moest frequent value of k. 
