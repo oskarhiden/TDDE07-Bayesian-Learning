@@ -77,8 +77,8 @@ y_post
 #Calculate mean for y each day form all predictions
 #y_mean = colMeans(y_post)
 y_median = apply(y_post,2,median)
-plot(time*365, y_median, type="l")
-points(temp, col="blue")
+plot(temp, col="blue")
+points(time*365, y_median, type="l")
 
 #curves for 95% equal tail
 #sorted_y_post = sort(y_psot)
@@ -86,3 +86,12 @@ sorted_y_post = apply(y_post,2,sort,decreasing=F)
 points(sorted_y_post[round(nr_draws*0.025),], type="l", col="red")
 points(sorted_y_post[round(nr_draws*0.975),], type="l", col="red")
 
+
+quantile_y_post = apply(y_post,2,quantile, probs=c(0.025,0.975))
+points(quantile_y_post[1,], col="green", type="l")
+points(quantile_y_post[2,], col="green", type="l")
+# The posterior probability intevall showes us were our real model would be wthin wiht 95% credability. (from beta)
+# It does not show were the actual y is by 95% credability. 
+
+x_hat = which.max(y_median)
+y_median[x_hat]
