@@ -153,3 +153,12 @@ post_beta = optim_results$par
 j_y = -optim_results$hessian # Posterior covariance matrix is -inv(Hessian)
 post_cov = solve(j_y) #inverse
 
+#nSmallChild = idex 7
+b_sc = post_beta[7]
+sigma2_sc = post_cov[7,7]
+
+#draw from nrom
+draws_sc = rnorm(1000, b_sc, sigma2_sc)
+draws_sc
+
+quantile_sc = apply(draws_sc,2,quantile, probs=c(0.025,0.975))
