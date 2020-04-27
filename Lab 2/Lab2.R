@@ -108,3 +108,9 @@ all_hot_days2 = (-betas_post[,2]/(2*betas_post[,3]))*365
 all_hot_days2
 
 #2d
+# We will have a laplace distribution for the betas with u0=0 and omega0=I(8)*lambda. Were lambda is the smoothing 
+# coefficient that decides how much the betas are allowed to differ from zero and u0 sets the mean of these to be zero 
+# in the beginning. This will make a few betas go into the fat tails of the laplace distribution and a few to end up 
+# at 0, the prior mean.
+
+# 3a
