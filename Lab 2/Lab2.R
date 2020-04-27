@@ -114,3 +114,42 @@ all_hot_days2
 # at 0, the prior mean.
 
 # 3a
+women = read.table("/Users/oskarhiden/Git/TDDE07 Bayesian Learning/Lab 2/WomenWork.dat", header = TRUE)
+women = as.numeric(women[-1,])
+
+y = as.vector(women[,1])
+X = as.matrix(women[,-1])
+nr_param = length(X[1,])
+
+# Prior values
+mu = rep(0, nr_param)
+tau = 10
+sigma = tau^2*diag(nr_param)
+
+posterior_loglike = function(beta, y, X, mu, sigma){
+  nr_param = length(beta)
+  x_B = X%*%beta
+  
+  #loglike of
+  log_like = sum( x_B*y -log(1 + exp(x_B)))
+  if (abs(log_like) == Inf) logLik = -20000 # constraint for logLike
+  
+  # evaluating the prior
+  log_prior = dmvnorm(beta, matrix(0,nr_param,1), sigma, log=TRUE)
+  
+  # add the log prior and log-likelihood together to get log posterior
+  return(log_like + log_prior)
+  
+}
+
+#startvalues for beta vector
+init_beta = as.vector(rep(0,nr_param))
+
+#Maximising loglike by changing beta
+optim_results<-optim(init_beta, posterior_loglike, gr=NULL,y,X,mu,sigma,method=c("BFGS"),control=list(fnscale=-1),hessian=TRUE)
+
+#Result
+post_beta = optim_results$par
+j_y = -optim_results$hessian # Posterior covariance matrix is -inv(Hessian)
+post_cov = solve(j_y) #inverse
+
