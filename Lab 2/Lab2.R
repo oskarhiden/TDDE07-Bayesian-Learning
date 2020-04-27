@@ -30,7 +30,7 @@ betas
 A = rep(1, length(time))
 B = time
 C = time^2
-x = cbind(A, B, C)
+x = cbind(A, B, C) #beta order B0, B1, B2
 x
 t(x)
 y_draws = betas%*%t(x) 
@@ -47,6 +47,7 @@ for (i in 2:nr_draws) {
 
 #2b
 #posterior
+library(matlib)
 beta_hat = inv( t(x)%*%x ) %*% (t(x)%*%temp)
 mu_n = inv( t(x)%*%x+omega_0 )%*%( t(x)%*%x%*%beta_hat + omega_0%*%mu_0)
 omega_n = t(x)%*%x+omega_0
@@ -93,5 +94,17 @@ points(quantile_y_post[2,], col="green", type="l")
 # The posterior probability intevall showes us were our real model would be wthin wiht 95% credability. (from beta)
 # It does not show were the actual y is by 95% credability. 
 
+#2c
 x_hat = which.max(y_median)
 y_median[x_hat]
+
+#From previous data
+all_hot_days = apply(y_post, 1, which.max)
+all_hot_days
+hist(all_hot_days, breaks=10)
+
+#from derivation
+all_hot_days2 = (-betas_post[,2]/(2*betas_post[,3]))*365
+all_hot_days2
+
+#2d
