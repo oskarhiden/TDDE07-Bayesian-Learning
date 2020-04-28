@@ -5,7 +5,7 @@ data = read.table("/Users/oskarhiden/Git/TDDE07 Bayesian Learning/Lab 2/TempLink
 time = as.numeric(as.vector(data[-1,1]))
 temp = as.numeric(as.vector(data[-1,2]))
 
-# 2a)
+# 1a)
 mu_0 = c(-10, 100, -100)
 omega_0 = 0.01*diag(3)
 omega_0_inv = 100*diag(3)
@@ -45,7 +45,7 @@ for (i in 2:nr_draws) {
 # hottest in the summer
 
 
-#2b
+#1b
 #posterior
 library(matlib)
 beta_hat = inv( t(x)%*%x ) %*% (t(x)%*%temp)
@@ -94,26 +94,25 @@ points(quantile_y_post[2,], col="green", type="l")
 # The posterior probability intevall showes us were our real model would be wthin wiht 95% credability. (from beta)
 # It does not show were the actual y is by 95% credability. 
 
-#2c
+#1c
 x_hat = which.max(y_median)
 y_median[x_hat]
 
 #From previous data
 all_hot_days = apply(y_post, 1, which.max)
-all_hot_days
 hist(all_hot_days, breaks=10)
 
 #from derivation
 all_hot_days2 = (-betas_post[,2]/(2*betas_post[,3]))*365
-all_hot_days2
+hist(all_hot_days2)
 
-#2d
+#1d
 # We will have a laplace distribution for the betas with u0=0 and omega0=I(8)*lambda. Were lambda is the smoothing 
 # coefficient that decides how much the betas are allowed to differ from zero and u0 sets the mean of these to be zero 
 # in the beginning. This will make a few betas go into the fat tails of the laplace distribution and a few to end up 
 # at 0, the prior mean.
 
-# 3a
+# 2a
 women = read.table("/Users/oskarhiden/Git/TDDE07 Bayesian Learning/Lab 2/WomenWork.dat", header = TRUE)
 women = as.numeric(women[-1,])
 
@@ -198,5 +197,3 @@ for (i in pred_y_given_x) {
 }
 hist(allPredictions)
 # TEST
-pred = rbinom(nr_draws, 10, c(0.1, 0.2))
-hist(pred)
