@@ -161,7 +161,7 @@ sigma2_sc = post_cov[7,7]
 quantile_sc = dnorm(c(0.025,0.975), b_sc, sigma2_sc)
 quantile_sc
 
-#2c
+#2b
 library(mvtnorm)
 #Predicting for
 husband_inc = 10
@@ -180,6 +180,12 @@ pred_y_given_x = exp_xb/(1+exp_xb)
 
 hist(pred_y_given_x)
 
+#2c
+nr_draws = 100
+beta_draws = rmvnorm(nr_draws*10, post_beta, post_cov)
+exp_xb = exp(X_pred%*%t(beta_draws))
+pred_y_given_x = exp_xb/(1+exp_xb)
 
-#2d
+pred = rbinom(nr_draws, 10, pred_y_given_x)
+hist(pred)
 
