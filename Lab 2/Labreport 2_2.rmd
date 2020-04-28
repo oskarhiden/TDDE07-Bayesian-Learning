@@ -1,0 +1,107 @@
+---
+title: "Lab 1"
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Part 2
+Posterior approximation for classification with logistic regression
+The dataset WomenWork.dat contains n = 200 observations (i.e. women) on the
+following nine variables:
+
+### a)
+Consider the logistic regression:
+
+$$Pr(y=1|x)=\frac{exp(x^T\beta)}{1+exp(x^T\beta)} $$
+
+where y is the binary variable with y = 1 if the woman works and y = 0 if she does not. x is a 8-dimensional vector containing the eight features (including a one for the constant term that models the intercept). The goal is to approximate the posterior distribution of the 8-dim parameter vector $\beta$ with a multivariate normal distribution:
+
+$$\beta|y, X \sim N(\tilde{\beta},J_y^{-1}(\tilde{\beta})))$$
+
+where $\tilde{\beta}$ is the posterior mode and $J(\tilde{\beta}) = -\delta^2\frac{\log (p(\tilde{\beta}|y))}{\delta\beta\delta\beta^T} |_{\beta=\tilde{\beta}}$ is the observed Hessian evaluated at the posterior mode. Note that $\delta^2\frac{\log(p(\tilde{\beta}|y))}{\delta\beta\delta\beta^T}$ is an 8×8 matrix with second derivatives on the diagonal and cross-derivatives $\delta^2\frac{\log (p(\tilde{\beta}|y))}{\delta\beta_i\delta\beta_j}$ on the offdiagonal. It is actually not hard to compute this derivative by hand, but don’t worry, we will let the computer do it numerically for you. Now, both $\tilde{\beta}$ and $J(\tilde{\beta})$ are computed by the optim function in R. Use the prior $\beta \sim N(0,\tau^2I))$
+I), with $\tau=10$.Your report should include your code as well as numerical values for $\beta$ and $J^{-1}(\tilde{\beta})$ for the WomenWork data. Compute an approximate 95% credible interval for the variable NSmallChild. Would you say that this feature is an
+important determinant of the probability that a women works? [Hint: To verify that your results are reasonable, you can compare to you get by estimating the parameters using maximum likelihood: glmModel <- glm(Work
+~ 0 + ., data = WomenWork, family = binomial).]
+
+
+```{r 1a}
+filename='C:/Users/samue/Documents/LIU/TDDE07/LABS/TDDE07-Bayesian-Learning/Samuel lab 2/WomenWork.txt'
+Data<-read.table(filename,head=TRUE)
+y=(as.vector(Data[,1]))
+x=as.matrix(Data[,-1])
+numberOfParameters=length(x[1,])
+library(mvtnorm)
+
+#a)
+logPosteriorProbability=function(beta,y,x,mu,sigma){
+  
+  lengthBeta=length(beta)
+  linearPrediction=x%*%beta
+  
+  logMaximumLikelihood=sum(y*linearPrediction-log(1+exp(linearPrediction)))
+  
+
+  logPrior= dmvnorm(beta, matrix(0,lengthBeta,1), sigma, log=TRUE);
+  return(logMaximumLikelihood+logPrior)
+  
+}
+
+tau=10
+betaStart=as.vector(rep(0,numberOfParameters))
+priorMean=as.vector(rep(0,numberOfParameters))
+priorStd=tau^2*diag(numberOfParameters)
+
+
+OptimResults<-optim(betaStart,logPosteriorProbability,gr=NULL,y,x,priorMean,priorStd,method=c("BFGS"),control=list(fnscale=-1),hessian=TRUE)
+
+postMode <- OptimResults$par
+
+
+postCov <- -solve(OptimResults$hessian)
+y=qnorm(c(0.025,0.975),postMode[7],postCov[7,7])
+postMode
+postCov
+y
+
+```
+Would you say that this feature is an important determinant of the probability that a women works?
+
+Yes it is important. If we change the nmber of childs from 0 to 1 of one woman when the linear prediction is 0 (were the derivative of the logistic is at its maximum) we will get a probability change from 50% to 73 % and the absolute value of this variable is with 95% confidence abow zero (two sided)
+
+
+### b)
+Write a function that simulates from the predictive distribution of the response variable in a logistic regression. Use your normal approximation from 2(a).Use that function to simulate and plot the predictive distribution for the Work variable for a 40 year old woman, with two children (3 and 9 years old), 8 years of education, 10 years of experience. and a husband with an income of 10. [Hints: The R package mvtnorm will again be handy. Remember my discussion on how Bayesian prediction can be done by simulation.]
+
+
+```{r numberOfSamples, r postMode, r postCov}
+library(MASS)
+numberOfSamples=100
+simulatedBetas=mvrnorm(numberOfSamples,postMode,postCov)
+xForB=c(1, 10, 8, 10, 1, 40, 1, 1)
+linearPrediction=xForB%*%t(simulatedBetas)
+yPredictions=exp(linearPrediction)/(1+exp(linearPrediction))
+hist(yPredictions)
+```
+
+### c)
+Now, consider 10 women which all have the same features as the woman in 2(b). Rewrite your function and plot the predictive distribution for the number of women, out of these 10, that are working. [Hint: Which distribution can be described as a sum of Bernoulli random variables?]
+```{r postMode, r postCov}
+numberOfSamples=1000
+simulatedBetasC=mvrnorm(numberOfSamples,postMode,postCov)
+linearPredictionC=xForB%*%t(simulatedBetas)
+yPredictions=exp(linearPrediction)/(1+exp(linearPrediction))
+allPredictions=c()
+for (i in yPredictions) {
+  allPredictions=cbind(allPredictions,rbinom(1,10,i))  
+}
+
+hist(allPredictions)
+
+```
+
