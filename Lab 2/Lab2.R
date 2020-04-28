@@ -186,6 +186,17 @@ beta_draws = rmvnorm(nr_draws*10, post_beta, post_cov)
 exp_xb = exp(X_pred%*%t(beta_draws))
 pred_y_given_x = exp_xb/(1+exp_xb)
 
+set.seed(12345)
 pred = rbinom(nr_draws, 10, pred_y_given_x)
-hist(pred)
+pred
 
+# TEST
+set.seed(12345)
+allPredictions=c()
+for (i in pred_y_given_x) {
+  allPredictions=cbind(allPredictions,rbinom(1,10,i))  
+}
+hist(allPredictions)
+# TEST
+pred = rbinom(nr_draws, 10, c(0.1, 0.2))
+hist(pred)
