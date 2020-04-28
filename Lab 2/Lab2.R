@@ -114,3 +114,89 @@ all_hot_days2
 # at 0, the prior mean.
 
 # 3a
+women = read.table("/Users/oskarhiden/Git/TDDE07 Bayesian Learning/Lab 2/WomenWork.dat", header = TRUE)
+women = as.numeric(women[-1,])
+
+y = as.vector(women[,1])
+X = as.matrix(women[,-1])
+nr_param = length(X[1,])
+
+# Prior values
+mu = rep(0, nr_param)
+tau = 10
+sigma = tau^2*diag(nr_param)
+
+posterior_loglike = function(beta, y, X, mu, sigma){
+  nr_param = length(beta)
+  x_B = X%*%beta
+  
+  #loglike of
+  log_like = sum( x_B*y -log(1 + exp(x_B)))
+  if (abs(log_like) == Inf) logLik = -20000 # constraint for logLike
+  
+  # evaluating the prior
+  log_prior = dmvnorm(beta, matrix(0,nr_param,1), sigma, log=TRUE)
+  
+  # add the log prior and log-likelihood together to get log posterior
+  return(log_like + log_prior)
+  
+}
+
+#startvalues for beta vector
+init_beta = as.vector(rep(0,nr_param))
+
+#Maximising loglike by changing beta
+optim_results<-optim(init_beta, posterior_loglike, gr=NULL,y,X,mu,sigma,method=c("BFGS"),control=list(fnscale=-1),hessian=TRUE)
+
+#Result
+post_beta = optim_results$par
+j_y = -optim_results$hessian # Posterior covariance matrix is -inv(Hessian)
+post_cov = solve(j_y) #inverse
+
+#nSmallChild = idex 7
+b_sc = post_beta[7]
+sigma2_sc = post_cov[7,7]
+
+#draw from nrom
+quantile_sc = dnorm(c(0.025,0.975), b_sc, sigma2_sc)
+quantile_sc
+
+#2b
+library(mvtnorm)
+#Predicting for
+husband_inc = 10
+years_ed = 8
+years_exp = 10
+age = 40
+nr_small_ch = 1
+nr_big_ch = 1
+X_pred = c(1, husband_inc, years_ed, years_exp, (years_exp/10)^2, age, nr_small_ch, nr_big_ch )
+
+#draw beta from posterior
+nr_draws = 100
+beta_draws = rmvnorm(100, post_beta, post_cov)
+exp_xb = exp(X_pred%*%t(beta_draws))
+pred_y_given_x = exp_xb/(1+exp_xb)
+
+hist(pred_y_given_x)
+
+#2c
+nr_draws = 100
+beta_draws = rmvnorm(nr_draws*10, post_beta, post_cov)
+exp_xb = exp(X_pred%*%t(beta_draws))
+pred_y_given_x = exp_xb/(1+exp_xb)
+
+set.seed(12345)
+pred = rbinom(nr_draws, 10, pred_y_given_x)
+pred
+
+# TEST
+set.seed(12345)
+allPredictions=c()
+for (i in pred_y_given_x) {
+  allPredictions=cbind(allPredictions,rbinom(1,10,i))  
+}
+hist(allPredictions)
+# TEST
+pred = rbinom(nr_draws, 10, c(0.1, 0.2))
+hist(pred)
