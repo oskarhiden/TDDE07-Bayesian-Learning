@@ -1,6 +1,8 @@
 ---
 title: "Lab 2"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -8,9 +10,16 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Lab 1
+Linear and polynomial regression. 
+The dataset TempLinkoping.txt contains daily average temperatures (in Celcius degrees) at Malmslätt, Linköping over the course of the year 2018. The response variable is temp and the covariate is
+$$ time = \frac{\mbox{nr of days since begining of year}}{356}$$
+The task is to perform a Bayesian analysis of a quadratic regression
+$$ temp = \beta_0 + \beta_1 * time + \beta_2 * time^2 + \epsilon, \epsilon \sim \mathcal{N}(0,\,\sigma^{2})$$
 
 ### a
 
+
+Determining the prior distribution of the model parameters. Use the conjugate prior for the linear regression model. Your task is to set the prior hyperparameters $\mu_0, \Omega_0, v_0$ and $\sigma_0^2$ to sensible values. Start with $\mu_0 = (-10, 100, -100)^T, \omega_0 = 0.01*I_3, v_0 = 4$ and $\sigma_0^2 = 1$. Check if this prior agrees with your prior opinions by simulating draws from the joint prior of all parameters and for every draw compute the regression curve. This gives a collection of regression curves, one for each draw from the prior. Do the collection of curves look rea- sonable? If not, change the prior hyperparameters until the collection of prior regression curves agrees with your prior beliefs about the regression curve. [Hint: the R package mvtnorm will be handy. And use your $Inv-\chi^2$ simulator from Lab 1.]
 
 ```{r 1a}
 data = read.table("/Users/oskarhiden/Git/TDDE07 Bayesian Learning/Lab 2/TempLinkoping.txt")
@@ -55,7 +64,10 @@ It looks reasonable, since the temperature is higher during summer (middle of th
 
 ### b
 
-```{r 1b}
+
+Write a program that simulates from the joint posterior distribution of $\beta_0, \beta_1, \beta_2$ and $\sigma$. Plot the marginal posteriors for each parameter as a histogram. Also produce another figure with a scatter plot of the temperature data and overlay a curve for the posterior median of the regression function $f(time) = \beta_0 + \beta_1*time + \beta_2*time^2$, computed for every value of time. Also overlay curves for the lower 2.5% and upper 97.5% posterior credible interval for f(time). That is, compute the 95% equal tail posterior probability intervals for every value of time and then connect the lower and upper limits of the interval by curves. Does the interval bands contain most of the data points? Should they?
+
+```{r 1b, warning=F}
 #1b
 #posterior
 library(matlib)
@@ -104,6 +116,10 @@ points(quantile_y_post[2,], col="green", type="l")
 The posterior probability intevall shows us were our real model would be wthin with 95% credability (from beta). It does not show were the actual y is by 95% credability.
 
 ### c
+
+
+It is of interest to locate the time with the highest expected temperature (that is, the time where f(time) is maximal). Let’s call this value $\bar{x}$. Use the simulations in b) to simulate from the posterior distribution of $\bar{x}$. [Hint: the regression curve is a quadratic. You can find a simple formula for $\bar{x}$, given $\beta_0, \beta_1, \beta_2$]
+
 ```{r 1c}
 x_hat = which.max(y_median)
 y_median[x_hat]
@@ -118,5 +134,8 @@ hist(all_hot_days2)
 ```
 
 ### d
-We will have a laplace distribution for the betas with u0=0 and omega0=I(8)*lambda. Were lambda is the smoothing coefficient that decides how much the betas are allowed to differ from zero and u0 sets the mean of these to be zero in the beginning. This will make a few betas go into the fat tails of the laplace distribution and a few to end up at 0, the prior mean.
+Say now that you want to estimate a polynomial model of order 7, but you suspect that higher order terms may not be needed, and you worry about over- fitting. Suggest a suitable prior that mitigates this potential problem. You do not need to compute the posterior, just write down your prior. [Hint: the task is to specify $\mu_0$ and $\Omega_0$ in a smart way.]
+
+
+We will have a laplace distribution for the betas with $\mu_0 = 0$ and $\Omega_0 = I_8*\lambda$. Were lambda is the smoothing coefficient that decides how much the betas are allowed to differ from zero and $\mu_0$ sets the mean of these to be zero in the beginning. This will make a few betas go into the fat tails of the laplace distribution and a few to end up at 0, the prior mean.
 

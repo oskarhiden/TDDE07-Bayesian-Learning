@@ -1,0 +1,333 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{hyperref}
+\hypersetup{
+            pdftitle={Lab 2},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+\title{Lab 2}
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+\maketitle
+
+\hypertarget{lab-1}{%
+\subsection{Lab 1}\label{lab-1}}
+
+Linear and polynomial regression. The dataset TempLinkoping.txt contains
+daily average temperatures (in Celcius degrees) at Malmslätt, Linköping
+over the course of the year 2018. The response variable is temp and the
+covariate is
+\[ time = \frac{\mbox{nr of days since begining of year}}{356}\] The
+task is to perform a Bayesian analysis of a quadratic regression
+\[ temp = \beta_0 + \beta_1 * time + \beta_2 * time^2 + \epsilon, \epsilon \sim \mathcal{N}(0,\,\sigma^{2})\]
+\#\#\# a Determining the prior distribution of the model parameters. Use
+the conjugate prior for the linear regression model. Your task is to set
+the prior hyperparam- eters \(\mu_0, \Omega_0, v_0,\) and
+\$\sigma\_0\^{}2 \$ to sensible values. Start with \$\mu\_0 = (-10, 100,
+-100)\^{}T, \omega\_0 = 0.01*I\_3, v\_0 = 4 \$ and \(\sigma_0^2 = 1\).
+Check if this prior agrees with your prior opinions by simulating draws
+from the joint prior of all parameters and for every draw compute the
+regression curve. This gives a collection of regression curves, one for
+each draw from the prior. Do the collection of curves look rea- sonable?
+If not, change the prior hyperparameters until the collection of prior
+regression curves agrees with your prior beliefs about the regression
+curve. {[}Hint: the R package mvtnorm will be handy. And use your
+\(Inv-\chi^2\) simulator from Lab 1.{]}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data =}\StringTok{ }\KeywordTok{read.table}\NormalTok{(}\StringTok{"/Users/oskarhiden/Git/TDDE07 Bayesian Learning/Lab 2/TempLinkoping.txt"}\NormalTok{)}
+
+\NormalTok{time =}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{as.vector}\NormalTok{(data[}\OperatorTok{-}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{]))}
+\NormalTok{temp =}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{as.vector}\NormalTok{(data[}\OperatorTok{-}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{]))}
+
+\CommentTok{# 1a)}
+\NormalTok{mu_}\DecValTok{0}\NormalTok{ =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\OperatorTok{-}\DecValTok{10}\NormalTok{, }\DecValTok{100}\NormalTok{, }\DecValTok{-100}\NormalTok{)}
+\NormalTok{omega_}\DecValTok{0}\NormalTok{ =}\StringTok{ }\FloatTok{0.01}\OperatorTok{*}\KeywordTok{diag}\NormalTok{(}\DecValTok{3}\NormalTok{)}
+\NormalTok{omega_}\DecValTok{0}\NormalTok{_inv =}\StringTok{ }\DecValTok{100}\OperatorTok{*}\KeywordTok{diag}\NormalTok{(}\DecValTok{3}\NormalTok{)}
+\NormalTok{v_}\DecValTok{0}\NormalTok{ =}\StringTok{ }\DecValTok{4}
+\NormalTok{sigma_}\DecValTok{0}\NormalTok{_}\DecValTok{2}\NormalTok{ =}\StringTok{ }\DecValTok{1}
+
+\CommentTok{#draws sigma 2}
+\NormalTok{nr_draws =}\StringTok{ }\DecValTok{100}
+\NormalTok{x_draws =}\StringTok{ }\KeywordTok{rchisq}\NormalTok{(nr_draws,v_}\DecValTok{0}\NormalTok{)}
+\NormalTok{sigma2_draws =}\StringTok{ }\NormalTok{((v_}\DecValTok{0}\NormalTok{)}\OperatorTok{*}\NormalTok{sigma_}\DecValTok{0}\NormalTok{_}\DecValTok{2}\NormalTok{)}\OperatorTok{/}\NormalTok{x_draws}
+
+\CommentTok{#draws beta given simga}
+\KeywordTok{library}\NormalTok{(mvtnorm)}
+\NormalTok{betas =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(, }\DataTypeTok{nrow=}\NormalTok{nr_draws, }\DataTypeTok{ncol=}\DecValTok{3}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{nr_draws) \{}
+\NormalTok{  covar =}\StringTok{ }\NormalTok{sigma2_draws[i]}\OperatorTok{*}\NormalTok{omega_}\DecValTok{0}\NormalTok{_inv}
+\NormalTok{  betas[i,] =}\StringTok{ }\KeywordTok{rmvnorm}\NormalTok{(}\DecValTok{1}\NormalTok{, mu_}\DecValTok{0}\NormalTok{, covar)}
+\NormalTok{\}}
+\NormalTok{A =}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\KeywordTok{length}\NormalTok{(time))}
+\NormalTok{B =}\StringTok{ }\NormalTok{time}
+\NormalTok{C =}\StringTok{ }\NormalTok{time}\OperatorTok{^}\DecValTok{2}
+\NormalTok{x =}\StringTok{ }\KeywordTok{cbind}\NormalTok{(A, B, C) }\CommentTok{#beta order B0, B1, B2}
+\NormalTok{y_draws =}\StringTok{ }\NormalTok{betas}\OperatorTok{%*%}\KeywordTok{t}\NormalTok{(x)}
+
+\CommentTok{#draw predictions}
+\KeywordTok{plot}\NormalTok{(time}\OperatorTok{*}\DecValTok{365}\NormalTok{, y_draws[}\DecValTok{1}\NormalTok{,], }\DataTypeTok{type =} \StringTok{"l"}\NormalTok{, }\DataTypeTok{ylim =} \KeywordTok{c}\NormalTok{(}\OperatorTok{-}\DecValTok{60}\NormalTok{,}\DecValTok{70}\NormalTok{))}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{2}\OperatorTok{:}\NormalTok{nr_draws) \{}
+  \KeywordTok{points}\NormalTok{( y_draws[i,], }\DataTypeTok{type=}\StringTok{"l"}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Labreport-2_files/figure-latex/1a-1.pdf}
+
+It looks reasonable, since the temperature is higher during summer
+(middle of the curves) and lower during winter (start and end of the
+curve)
+
+\hypertarget{b}{%
+\subsubsection{b}\label{b}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#1b}
+\CommentTok{#posterior}
+\KeywordTok{library}\NormalTok{(matlib)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in rgl.init(initValue, onlyNULL): RGL: unable to open X11 display
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: 'rgl.init' failed, running with 'rgl.useNULL = TRUE'.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{beta_hat =}\StringTok{ }\KeywordTok{inv}\NormalTok{( }\KeywordTok{t}\NormalTok{(x)}\OperatorTok{%*%}\NormalTok{x ) }\OperatorTok{%*%}\StringTok{ }\NormalTok{(}\KeywordTok{t}\NormalTok{(x)}\OperatorTok{%*%}\NormalTok{temp)}
+\NormalTok{mu_n =}\StringTok{ }\KeywordTok{inv}\NormalTok{( }\KeywordTok{t}\NormalTok{(x)}\OperatorTok{%*%}\NormalTok{x}\OperatorTok{+}\NormalTok{omega_}\DecValTok{0}\NormalTok{ )}\OperatorTok{%*%}\NormalTok{( }\KeywordTok{t}\NormalTok{(x)}\OperatorTok{%*%}\NormalTok{x}\OperatorTok{%*%}\NormalTok{beta_hat }\OperatorTok{+}\StringTok{ }\NormalTok{omega_}\DecValTok{0}\OperatorTok{%*%}\NormalTok{mu_}\DecValTok{0}\NormalTok{)}
+\NormalTok{omega_n =}\StringTok{ }\KeywordTok{t}\NormalTok{(x)}\OperatorTok{%*%}\NormalTok{x}\OperatorTok{+}\NormalTok{omega_}\DecValTok{0}
+\NormalTok{v_n =}\StringTok{ }\NormalTok{v_}\DecValTok{0} \OperatorTok{+}\StringTok{ }\KeywordTok{length}\NormalTok{(time)}
+\NormalTok{sigma_n_}\DecValTok{2}\NormalTok{ =}\StringTok{ }\NormalTok{(v_}\DecValTok{0}\OperatorTok{*}\NormalTok{sigma_}\DecValTok{0}\NormalTok{_}\DecValTok{2} \OperatorTok{+}\StringTok{ }\NormalTok{(}\KeywordTok{t}\NormalTok{(temp)}\OperatorTok{%*%}\NormalTok{temp }\OperatorTok{+}\StringTok{ }\KeywordTok{t}\NormalTok{(mu_}\DecValTok{0}\NormalTok{)}\OperatorTok{%*%}\NormalTok{omega_}\DecValTok{0}\OperatorTok{%*%}\NormalTok{mu_}\DecValTok{0} \OperatorTok{-}\StringTok{ }\KeywordTok{t}\NormalTok{(mu_n)}\OperatorTok{%*%}\NormalTok{omega_n}\OperatorTok{%*%}\NormalTok{mu_n))}\OperatorTok{/}\NormalTok{v_n}
+
+\CommentTok{#draw sigma2}
+\NormalTok{nr_draws =}\StringTok{ }\DecValTok{100}
+\NormalTok{sigma_draws =}\StringTok{ }\KeywordTok{rchisq}\NormalTok{(nr_draws,v_n) }
+\NormalTok{sigma2_draws =}\StringTok{ }\NormalTok{((v_n)}\OperatorTok{*}\NormalTok{sigma_n_}\DecValTok{2}\NormalTok{)}\OperatorTok{/}\NormalTok{sigma_draws}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in ((v_n) * sigma_n_2)/sigma_draws: Recycling array of length 1 in array-vector arithmetic is deprecated.
+##   Use c() or as.vector() instead.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{betas_post =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(, }\DataTypeTok{nrow=}\NormalTok{nr_draws, }\DataTypeTok{ncol=}\DecValTok{3}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{nr_draws) \{}
+\NormalTok{  covar =}\StringTok{ }\NormalTok{sigma2_draws[i]}\OperatorTok{*}\KeywordTok{inv}\NormalTok{(omega_n)}
+\NormalTok{  betas_post[i,] =}\StringTok{ }\KeywordTok{rmvnorm}\NormalTok{(}\DecValTok{1}\NormalTok{, mu_n, covar)}
+\NormalTok{\}}
+
+\CommentTok{#plot hist of beta and sigma}
+\KeywordTok{hist}\NormalTok{(sigma2_draws, }\DataTypeTok{breaks =} \DecValTok{50}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Labreport-2_files/figure-latex/1b-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(betas[,}\DecValTok{1}\NormalTok{], }\DataTypeTok{breaks =} \DecValTok{50}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Labreport-2_files/figure-latex/1b-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(betas[,}\DecValTok{2}\NormalTok{], }\DataTypeTok{breaks =} \DecValTok{50}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Labreport-2_files/figure-latex/1b-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(betas[,}\DecValTok{3}\NormalTok{], }\DataTypeTok{breaks =} \DecValTok{50}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Labreport-2_files/figure-latex/1b-4.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# calculate y, predicted temp for all draws}
+\NormalTok{y_post =}\StringTok{ }\NormalTok{betas_post}\OperatorTok{%*%}\KeywordTok{t}\NormalTok{(x) }
+
+\CommentTok{#Calculate mean for y each day form all predictions}
+\NormalTok{y_median =}\StringTok{ }\KeywordTok{apply}\NormalTok{(y_post,}\DecValTok{2}\NormalTok{,median)}
+\KeywordTok{plot}\NormalTok{(temp, }\DataTypeTok{col=}\StringTok{"blue"}\NormalTok{)}
+\KeywordTok{points}\NormalTok{(time}\OperatorTok{*}\DecValTok{365}\NormalTok{, y_median, }\DataTypeTok{type=}\StringTok{"l"}\NormalTok{)}
+
+\CommentTok{#approx curves for 95% equal tail by sorting}
+\CommentTok{#sorted_y_post = apply(y_post,2,sort,decreasing=F)}
+\CommentTok{#points(sorted_y_post[round(nr_draws*0.025),], type="l", col="red")}
+\CommentTok{#points(sorted_y_post[round(nr_draws*0.975),], type="l", col="red")}
+
+\NormalTok{quantile_y_post =}\StringTok{ }\KeywordTok{apply}\NormalTok{(y_post,}\DecValTok{2}\NormalTok{,quantile, }\DataTypeTok{probs=}\KeywordTok{c}\NormalTok{(}\FloatTok{0.025}\NormalTok{,}\FloatTok{0.975}\NormalTok{))}
+\KeywordTok{points}\NormalTok{(quantile_y_post[}\DecValTok{1}\NormalTok{,], }\DataTypeTok{col=}\StringTok{"green"}\NormalTok{, }\DataTypeTok{type=}\StringTok{"l"}\NormalTok{)}
+\KeywordTok{points}\NormalTok{(quantile_y_post[}\DecValTok{2}\NormalTok{,], }\DataTypeTok{col=}\StringTok{"green"}\NormalTok{, }\DataTypeTok{type=}\StringTok{"l"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Labreport-2_files/figure-latex/1b-5.pdf}
+
+The posterior probability intevall shows us were our real model would be
+wthin with 95\% credability (from beta). It does not show were the
+actual y is by 95\% credability.
+
+\hypertarget{c}{%
+\subsubsection{c}\label{c}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x_hat =}\StringTok{ }\KeywordTok{which.max}\NormalTok{(y_median)}
+\NormalTok{y_median[x_hat]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 16.1585
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#From previous data}
+\NormalTok{all_hot_days =}\StringTok{ }\KeywordTok{apply}\NormalTok{(y_post, }\DecValTok{1}\NormalTok{, which.max)}
+\KeywordTok{hist}\NormalTok{(all_hot_days, }\DataTypeTok{breaks=}\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Labreport-2_files/figure-latex/1c-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#from derivation}
+\NormalTok{all_hot_days2 =}\StringTok{ }\NormalTok{(}\OperatorTok{-}\NormalTok{betas_post[,}\DecValTok{2}\NormalTok{]}\OperatorTok{/}\NormalTok{(}\DecValTok{2}\OperatorTok{*}\NormalTok{betas_post[,}\DecValTok{3}\NormalTok{]))}\OperatorTok{*}\DecValTok{365}
+\KeywordTok{hist}\NormalTok{(all_hot_days2)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Labreport-2_files/figure-latex/1c-2.pdf}
+
+\hypertarget{d}{%
+\subsubsection{d}\label{d}}
+
+We will have a laplace distribution for the betas with u0=0 and
+omega0=I(8)*lambda. Were lambda is the smoothing coefficient that
+decides how much the betas are allowed to differ from zero and u0 sets
+the mean of these to be zero in the beginning. This will make a few
+betas go into the fat tails of the laplace distribution and a few to end
+up at 0, the prior mean.
+
+\end{document}

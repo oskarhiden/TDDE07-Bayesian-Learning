@@ -57,7 +57,7 @@ sigma_n_2 = (v_0*sigma_0_2 + (t(temp)%*%temp + t(mu_0)%*%omega_0%*%mu_0 - t(mu_n
 #draw sigma2
 nr_draws = 100
 sigma_draws = rchisq(nr_draws,v_n) 
-sigma2_draws = ((v_n)*sigma_n_2)/sigma_draws
+sigma2_draws = (v_n*sigma_n_2)/sigma_draws
 
 betas_post = matrix(, nrow=nr_draws, ncol=3)
 for (i in 1:nr_draws) {
