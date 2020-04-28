@@ -158,7 +158,28 @@ b_sc = post_beta[7]
 sigma2_sc = post_cov[7,7]
 
 #draw from nrom
-draws_sc = rnorm(1000, b_sc, sigma2_sc)
-draws_sc
+quantile_sc = dnorm(c(0.025,0.975), b_sc, sigma2_sc)
+quantile_sc
 
-quantile_sc = apply(draws_sc,2,quantile, probs=c(0.025,0.975))
+#2c
+library(mvtnorm)
+#Predicting for
+husband_inc = 10
+years_ed = 8
+years_exp = 10
+age = 40
+nr_small_ch = 1
+nr_big_ch = 1
+X_pred = c(1, husband_inc, years_ed, years_exp, (years_exp/10)^2, age, nr_small_ch, nr_big_ch )
+
+#draw beta from posterior
+nr_draws = 100
+beta_draws = rmvnorm(100, post_beta, post_cov)
+exp_xb = exp(X_pred%*%t(beta_draws))
+pred_y_given_x = exp_xb/(1+exp_xb)
+
+hist(pred_y_given_x)
+
+
+#2d
+
