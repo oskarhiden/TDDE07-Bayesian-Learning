@@ -157,7 +157,7 @@ b_sc = post_beta[7]
 sigma2_sc = post_cov[7,7]
 
 #draw from nrom
-quantile_sc = dnorm(c(0.025,0.975), b_sc, sigma2_sc)
+quantile_sc = qnorm(c(0.025,0.975), b_sc, sigma2_sc)
 quantile_sc
 
 #2b
