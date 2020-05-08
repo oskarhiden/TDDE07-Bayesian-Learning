@@ -11,14 +11,14 @@ x = as.matrix(rainfall)
 nComp <- 2    # Number of mixture components
 
 # Prior options
-alpha <- 10*rep(1,nComp) # Dirichlet(alpha)
-muPrior <- rep(0,nComp) # Prior mean of mu
-tau2Prior <- rep(10,nComp) # Prior std of mu
-sigma2_0 <- rep(var(x),nComp) # s20 (best guess of sigma2)
-nu0 <- rep(4,nComp) # degrees of freedom for prior on sigma2
-
+alpha <- 1*rep(1,nComp) # Dirichlet(alpha)  # changing to 1 since we do not know anything about the prior
+muPrior <- rep(mu_hat,nComp) # Prior mean of mu  #changing to my_hat observed from Gibs sampling
+tau2Prior <- rep(1500,nComp) # Prior std of mu  # setting a hich uncertainty in ur prior beleves. 
+sigma2_0 <- rep(sigma2_hat,nComp) # s20 (best guess of sigma2)  #observed mean of sigma in gibbs.
+nu0 <- rep(10,nComp) # degrees of freedom for prior on sigma2   # we are quite confident of how sigma distributes as one nomral dist, but not how te two
+                                                              # normal will be centerd, but somwear near this mean.
 # MCMC options
-nIter <- 1000 # Number of Gibbs sampling draws
+nIter <- 30 # Number of Gibbs sampling draws
 
 # Plotting options
 plotFit <- TRUE
@@ -100,27 +100,26 @@ for (k in 1:nIter){
     S[i,] <- t(rmultinom(1, size = 1 , prob = probObsInComp/sum(probObsInComp)))
   }
   
-  
-  # Printing the fitted density against data histogram
-#  if (plotFit && (k%%1 ==0)){
-#    effIterCount <- effIterCount + 1
-#    hist(x, breaks = 20, freq = FALSE, xlim = c(xGridMin,xGridMax), main = paste("Iteration number",k), ylim = ylim)
-#    mixDens <- rep(0,length(xGrid))
-#    components <- c()
-#    for (j in 1:nComp){
-#      compDens <- dnorm(xGrid,mu[j],sd = sqrt(sigma2[j]))
-#      mixDens <- mixDens + pi[j]*compDens
-#      lines(xGrid, compDens, type = "l", lwd = 2, col = lineColors[j])
-#      components[j] <- paste("Component ",j)
-#   }
-#    mixDensMean <- ((effIterCount-1)*mixDensMean + mixDens)/effIterCount
-#    
-#    lines(xGrid, mixDens, type = "l", lty = 2, lwd = 3, col = 'red')
-#    legend("topleft", box.lty = 1, legend = c("Data histogram",components, 'Mixture'), 
-#           col = c("black",lineColors[1:nComp], 'red'), lwd = 2)
-#    Sys.sleep(sleepTime)
-#  }
 
+  # Printing the fitted density against data histogram
+  if (plotFit && (k%%1 ==0)){
+    effIterCount <- effIterCount + 1
+    hist(x, breaks = 20, freq = FALSE, xlim = c(xGridMin,xGridMax), main = paste("Iteration number",k), ylim = ylim)
+    mixDens <- rep(0,length(xGrid))
+    components <- c()
+    for (j in 1:nComp){
+      compDens <- dnorm(xGrid,mu[j],sd = sqrt(sigma2[j]))
+      mixDens <- mixDens + pi[j]*compDens
+      lines(xGrid, compDens, type = "l", lwd = 2, col = lineColors[j])
+      components[j] <- paste("Component ",j)
+    }
+    mixDensMean <- ((effIterCount-1)*mixDensMean + mixDens)/effIterCount
+    
+    lines(xGrid, mixDens, type = "l", lty = 2, lwd = 3, col = 'red')
+    legend("topleft", box.lty = 1, legend = c("Data histogram",components, 'Mixture'), 
+           col = c("black",lineColors[1:nComp], 'red'), lwd = 2)
+    Sys.sleep(sleepTime)
+  }
 }
 
 hist(x, breaks = 20, freq = FALSE, xlim = c(xGridMin,xGridMax), main = "Final fitted density")
@@ -128,4 +127,5 @@ lines(xGrid, mixDensMean, type = "l", lwd = 2, lty = 4, col = "red")
 lines(xGrid, dnorm(xGrid, mean = mean(x), sd = apply(x,2,sd)), type = "l", lwd = 2, col = "blue")
 legend("topright", box.lty = 1, legend = c("Data histogram","Mixture density","Normal density"), col=c("black","red","blue"), lwd = 2)
 
+#Convergates quite fast, after 20 iterations can we clearly see how the two nomral distributions has stabilized. 
 #########################    Helper functions    ##############################################

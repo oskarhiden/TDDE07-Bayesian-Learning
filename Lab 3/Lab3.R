@@ -85,7 +85,33 @@ sort(abs(exp(model$coefficients)-1))
 
 
 # 2b
+library(mvtnorm)
+X = as.matrix(ebay[,2:10])
+y = ebay[,1]
+prior_cov = t(X)%*%X
+posterior_prob = function(beta, X, y){
+  log_like=0
+  for (i in 1:dim(X)[1]) {
+    lambda = exp(t(X[i,])%*%beta)
+    log_like = log_like +log(dpois(y[i], lambda = lambda))
+  }
+  
+    
+  prior_log_prob = log(dmvnorm(beta, mean = rep(0,nr_param), sigma = prior_cov))
+  tot_log_like = dim(X)[1]*prior_log_prob + log_like
+  return(tot_log_like)
+}
+#startvalues for beta vector
+nr_param = dim(X)[2]
+init_beta = as.vector(rep(0,nr_param))
+result = optim(init_beta, posterior_prob, gr=NULL, X, y, method=c("BFGS"), control=list(fnscale=-1), hessian=TRUE)
+
+beta_hat = result$par
+j_y = -result$hessian
+post_cov = solve(j_y)
 
 
+dmvnorm(init_beta, mean = rep(0,nr_param), sigma = prior_cov)
+t(X[1,])%*%init_beta
 
 
