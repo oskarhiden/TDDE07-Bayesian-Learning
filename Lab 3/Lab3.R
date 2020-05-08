@@ -46,7 +46,7 @@ plot(samples, type="b")
 hist(samples[,1], breaks = 30)
 hist(samples[,2], breaks = 30)
 mu_hat = mean(samples[,1])
-sigma_hat = mean(samples[,2])
+sigma2_hat = mean(samples[,2])
 #1b
 # Function that simulates from the Scaled Inv Chi 2
 scaled_inv_chi2 <- function(nr_draws, df, scale){
@@ -68,6 +68,24 @@ S2alloc <- function(S){
 dens = density(x)
 plot(dens)
 
-lines(xGrid, dnorm(xGrid, mean = mu_hat, sd = sqrt(simga_hat), type = "l", lwd = 2, col = "blue")
-
+lines(xGrid, dnorm(xGrid, mean = mu_hat, sd = sqrt(sigma2_hat)), type = "l", lwd = 2, col = "blue")
 lines(xGrid, mixDensMean, type = "l", lwd = 2, lty = 4, col = "red")
+legend("topright", box.lty = 1, legend = c("Kernel Density","Gibs normal","Mixted nomral"), col=c("black","red","blue"), lwd = 2)
+
+
+# 2a
+ebay = read.table("/Users/oskarhiden/Git/TDDE07 Bayesian Learning/Lab 3/eBayNumberOfBidderData.dat", header = TRUE)
+
+data = ebay[,-2]
+model = glm(nBids~PowerSeller+VerifyID +Sealed +Minblem + MajBlem + LargNeg + LogBook + MinBidShare,family = poisson, data=data)
+print(model$coefficients)
+
+sort(abs(exp(model$coefficients)-1))
+# MinBidShare have the biggest impact, and Sealed the second. PowerSeller seems to not impact. 
+
+
+# 2b
+
+
+
+
