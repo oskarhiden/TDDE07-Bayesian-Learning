@@ -45,11 +45,29 @@ samples
 plot(samples, type="b")
 hist(samples[,1], breaks = 30)
 hist(samples[,2], breaks = 30)
-
+mu_hat = mean(samples[,1])
+sigma_hat = mean(samples[,2])
 #1b
 # Function that simulates from the Scaled Inv Chi 2
-scaled_inv_chi2 <- function(n, df, scale){
-  return((df*scale)/rchisq(n,df=df))
+scaled_inv_chi2 <- function(nr_draws, df, scale){
+  return((df*scale)/rchisq(nr_draws,df=df))
+}
+
+# Function that converts between two different representations of the mixture allocation
+S2alloc <- function(S){
+  n <- dim(S)[1]
+  alloc <- rep(0,n)
+  for (i in 1:n){
+    alloc[i] <- which(S[i,] == 1)
+  }
+  return(alloc)
 }
 
 
+#1c
+dens = density(x)
+plot(dens)
+
+lines(xGrid, dnorm(xGrid, mean = mu_hat, sd = sqrt(simga_hat), type = "l", lwd = 2, col = "blue")
+
+lines(xGrid, mixDensMean, type = "l", lwd = 2, lty = 4, col = "red")

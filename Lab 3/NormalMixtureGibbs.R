@@ -3,12 +3,12 @@
 
 ##########    BEGIN USER INPUT #################
 # Data options
-data(faithful)
-rawData <- faithful
-x <- as.matrix(rawData['eruptions'])
-
+#data(faithful)
+#rawData <- faithful
+#x <- as.matrix(rawData['eruptions'])
+x = as.matrix(rainfall)
 # Model options
-nComp <- 4    # Number of mixture components
+nComp <- 2    # Number of mixture components
 
 # Prior options
 alpha <- 10*rep(1,nComp) # Dirichlet(alpha)
@@ -69,10 +69,10 @@ ylim <- c(0,2*max(hist(x)$density))
 
 
 for (k in 1:nIter){
-  message(paste('Iteration number:',k))
+  #message(paste('Iteration number:',k))
   alloc <- S2alloc(S) # Just a function that converts between different representations of the group allocations
   nAlloc <- colSums(S)
-  print(nAlloc)
+  #print(nAlloc)
   # Update components probabilities
   pi <- rDirichlet(alpha + nAlloc)
   
@@ -100,26 +100,27 @@ for (k in 1:nIter){
     S[i,] <- t(rmultinom(1, size = 1 , prob = probObsInComp/sum(probObsInComp)))
   }
   
-  # Printing the fitted density against data histogram
-  if (plotFit && (k%%1 ==0)){
-    effIterCount <- effIterCount + 1
-    hist(x, breaks = 20, freq = FALSE, xlim = c(xGridMin,xGridMax), main = paste("Iteration number",k), ylim = ylim)
-    mixDens <- rep(0,length(xGrid))
-    components <- c()
-    for (j in 1:nComp){
-      compDens <- dnorm(xGrid,mu[j],sd = sqrt(sigma2[j]))
-      mixDens <- mixDens + pi[j]*compDens
-      lines(xGrid, compDens, type = "l", lwd = 2, col = lineColors[j])
-      components[j] <- paste("Component ",j)
-    }
-    mixDensMean <- ((effIterCount-1)*mixDensMean + mixDens)/effIterCount
-    
-    lines(xGrid, mixDens, type = "l", lty = 2, lwd = 3, col = 'red')
-    legend("topleft", box.lty = 1, legend = c("Data histogram",components, 'Mixture'), 
-           col = c("black",lineColors[1:nComp], 'red'), lwd = 2)
-    Sys.sleep(sleepTime)
-  }
   
+  # Printing the fitted density against data histogram
+#  if (plotFit && (k%%1 ==0)){
+#    effIterCount <- effIterCount + 1
+#    hist(x, breaks = 20, freq = FALSE, xlim = c(xGridMin,xGridMax), main = paste("Iteration number",k), ylim = ylim)
+#    mixDens <- rep(0,length(xGrid))
+#    components <- c()
+#    for (j in 1:nComp){
+#      compDens <- dnorm(xGrid,mu[j],sd = sqrt(sigma2[j]))
+#      mixDens <- mixDens + pi[j]*compDens
+#      lines(xGrid, compDens, type = "l", lwd = 2, col = lineColors[j])
+#      components[j] <- paste("Component ",j)
+#   }
+#    mixDensMean <- ((effIterCount-1)*mixDensMean + mixDens)/effIterCount
+#    
+#    lines(xGrid, mixDens, type = "l", lty = 2, lwd = 3, col = 'red')
+#    legend("topleft", box.lty = 1, legend = c("Data histogram",components, 'Mixture'), 
+#           col = c("black",lineColors[1:nComp], 'red'), lwd = 2)
+#    Sys.sleep(sleepTime)
+#  }
+
 }
 
 hist(x, breaks = 20, freq = FALSE, xlim = c(xGridMin,xGridMax), main = "Final fitted density")
