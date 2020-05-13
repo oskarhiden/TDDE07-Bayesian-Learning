@@ -118,7 +118,7 @@ posterior_prob = function(beta, X, y){
   log_like=0
   for (i in 1:dim(X)[1]) {
     x_b = t(X[i,])%*%beta
-    part = x_b*y[i]+exp(x_b)-log_faculty(y[i])
+    part = x_b*y[i]-exp(x_b)-log_faculty(y[i])
     log_like = log_like + part
   }
   
@@ -136,7 +136,20 @@ beta_hat = result$par
 j_y = -result$hessian
 post_cov = solve(j_y)
 
-dmvnorm(init_beta, mean = rep(0,nr_param), sigma = prior_cov)
-t(X[1,])%*%init_beta
+beta_hat
+post_cov
+
+
+#2c
+
+metropolis = function(beta_hat){
+  
+}
+
+metropolis = function(log_post_func, ...){
+  
+}
+
+
 
 
