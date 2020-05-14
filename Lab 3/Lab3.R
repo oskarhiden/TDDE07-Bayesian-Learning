@@ -90,7 +90,7 @@ X = as.matrix(ebay[,2:10])
 
 y = ebay[,1]
 prior_cov = t(X)%*%X
-posterior_prob = function(beta, X, y){
+log_posterior_prob = function(beta, X, y){
   log_like=0
   for (i in 1:dim(X)[1]) {
     lambda = exp(t(X[i,])%*%beta)
@@ -114,7 +114,7 @@ log_faculty = function(y){
   return(log_fac) 
 }
 
-posterior_prob = function(beta, X, y){
+log_posterior_prob = function(beta, X, y){
   log_like=0
   for (i in 1:dim(X)[1]) {
     x_b = t(X[i,])%*%beta
@@ -130,7 +130,7 @@ posterior_prob = function(beta, X, y){
 #startvalues for beta vector
 nr_param = dim(X)[2]
 init_beta = as.vector(rep(0,nr_param))
-result = optim(init_beta, posterior_prob, gr=NULL, X, y, method=c("BFGS"), control=list(fnscale=-1), hessian=TRUE)
+result = optim(init_beta, log_posterior_prob, gr=NULL, X, y, method=c("BFGS"), control=list(fnscale=-1), hessian=TRUE)
 
 beta_hat = result$par
 j_y = -result$hessian
@@ -141,15 +141,94 @@ post_cov
 
 
 #2c
+library(MASS)
+library(LaplacesDemon)
 
-metropolis = function(beta_hat){
-  
+proposal_generator = function(theta_prev, c, cov_mat){
+  theta_p = mvrnorm(1, theta_prev, c*cov_mat)
+  return(theta_p)
 }
 
-metropolis = function(log_post_func, ...){
+alpha_generator = function(proposal, theta_before, log_post_func, ...){
   
+  new_prob = log_post_func(proposal,...)
+  old_prob = log_post_func(theta_before, ...)
+  
+  alpha = exp(new_prob - old_prob)
+  
+  return(min(alpha, 1))
 }
 
+metropolis = function(init_theta, c, nr_iter, cov_mat,log_post_func, ...){
+  
+  metrop_sim = matrix(data=1, nrow = nr_iter, ncol = length(init_theta))
+  metrop_sim[1,] = init_theta
+  
+  for (i in 2:nr_iter) {
+    proposal = proposal_generator(metrop_sim[i-1,],c,cov_mat);
+    
+    #calculate apha
+    alpha = alpha_generator(proposal, metrop_sim[i-1,],log_post_func, ...)
+    #accept the proposal with proability alpha
+    if( rbern(1, alpha)){
+      metrop_sim[i,] = proposal
+    }else{
+      metrop_sim[i,] = metrop_sim[i-1,]
+    }
+  }
+  return(metrop_sim)
+}
+init_theta = rep(0,length(beta_hat))
+c=1
+nr_iter=3000
+cov_mat = post_cov
+
+#proposal_generator(init_theta, c, cov_mat)
+metrop_samp = metropolis(init_theta, c, nr_iter, cov_mat,log_posterior_prob,X,y)
+
+hist(metrop_samp[,1])
+hist(metrop_samp[,2])
+hist(metrop_samp[,3])
+hist(metrop_samp[,4])
+hist(metrop_samp[,5])
+hist(metrop_samp[,6])
+hist(metrop_samp[,7])
+hist(metrop_samp[,8])
+hist(metrop_samp[,9])
+beta_hat
+
+#y1 = cumsum(metrop_samp[,1]) / seq_along(metrop_samp[,1]) 
+y1 = cumsum(metrop_samp[,1]) / 1:length(metrop_samp[,1]) 
+y2 = cumsum(metrop_samp[,2]) / 1:length(metrop_samp[,2])
+y3 = cumsum(metrop_samp[,3]) / 1:length(metrop_samp[,3])
+
+#convergence plotted with beta_hat, beta by optimization from maximum posterior liklehood. 
+plot(rep(beta_hat[1],length(metrop_samp[,1])), type="l", main="beta_1", ylim = c(0,1.2))
+lines(y1, type="l", col="blue")
+
+plot(rep(beta_hat[2],length(metrop_samp[,1])), type="l", main="beta_2", ylim = c(-0.12,0))
+lines(y2, type="l", col="blue")
+
+plot(rep(beta_hat[3],length(metrop_samp[,1])), type="l", main="beta_3",ylim = c(-0.4,0.2))
+lines(y3, type="l", col="blue")
+
+# 2d
+x_new = c(1,1,1,1,0,0,0,1,0.5)
+
+x_b_pred = metrop_samp%*%x_new
+lambda = exp(x_b_pred)
+hist(exp(lambda))
+
+min(lambda)
 
 
+#poisson for all observed lambda to get y
+y_prob_0 = rep(0,nr_iter)
+
+for (i in 1:nr_iter) {
+  
+  y_prob_0[i] = dpois(0,lambda[i])
+  
+}  
+sum(y_prob_0)/nr_iter
 
