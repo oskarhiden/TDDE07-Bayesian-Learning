@@ -32,7 +32,7 @@ print(model$coefficients)
 sort(abs(exp(model$coefficients)-1))
 
 ```
-MinBidShare have the biggest impact, and Sealed the second. PowerSeller seems to not impact.
+Answer: MinBidShare have the biggest impact, and Sealed the second. PowerSeller seems to not impact.
 
 
 ### b
