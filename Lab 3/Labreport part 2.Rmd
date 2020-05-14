@@ -1,0 +1,213 @@
+---
+title: "Labreport part 2"
+output: html_document
+---
+## Lab 2
+
+Metropolis Random Walk for Poisson regression. Consider the following Poisson regression model
+$$y_i|\beta \sim Poisson[exp(x_i^T\beta)], i=1,...,n$$
+where $y_i$ is the count for the ith observation in the sample and $x_i$ is the p-dimensional vector with covariate observations for the ith observation. Use the data set eBayNumberOfBidderData.dat. This dataset contains observations from 1000 eBay auctions of coins. The response variable is nBids and records the number of bids in each auction. The remaining variables are features/covariates (x):
+
+* Const (for the intercept)
+* PowerSeller (is the seller selling large volumes on eBay?)
+* VerifyID (is the seller verified by eBay?)
+* Sealed (was the coin sold sealed in never opened envelope?)
+* MinBlem (did the coin have a minor defect?)
+* MajBlem (a major defect?)
+* LargNeg (did the seller get a lot of negative feedback from customers?)
+* LogBook (logarithm of the coins book value according to expert sellers. Stan- dardized)
+* MinBidShare (a variable that measures ratio of the minimum selling price (starting price) to the book value. Standardized).
+
+### a
+
+Obtain the maximum likelihood estimator of $\beta$ in the Poisson regression model for the eBay data [Hint: glm.R, don’t forget that glm() adds its own intercept so don’t input the covariate Const]. Which covariates are significant?
+
+```{r 2a}
+ebay = read.table("/Users/oskarhiden/Git/TDDE07 Bayesian Learning/Lab 3/eBayNumberOfBidderData.dat", header = TRUE)
+
+data = ebay[,-2]
+model = glm(nBids~PowerSeller+VerifyID +Sealed +Minblem + MajBlem + LargNeg + LogBook + MinBidShare,family = poisson, data=data)
+print(model$coefficients)
+
+sort(abs(exp(model$coefficients)-1))
+
+```
+MinBidShare have the biggest impact, and Sealed the second. PowerSeller seems to not impact.
+
+
+### b
+
+Let’s now do a Bayesian analysis of the Poisson regression. Let the prior be $\beta \sim \mathcal{N}[0,100*(X^TX)^{-1}]$ where X is the n×p covariate matrix. This is a commonly used prior which is called Zellner’s g-prior. Assume first that the posterior density is approximately multivariate normal:
+$$\beta \sim \mathcal{N}(\tilde{\beta},J_y^{-1}(\tilde{\beta}))$$
+where $\beta$ is the posterior mode and $J_y(\tilde{\beta})$ is the negative Hessian at the posterior mode. $\beta$ and $J_y(\tilde{\beta})$ can be obtained by numerical optimization (optim.R) exactly like you already did for the logistic regression in Lab 2 (but with the log posterior function replaced by the corresponding one for the Poisson model, which you have to code up.).
+
+```{r 2b}
+library(mvtnorm)
+X = as.matrix(ebay[,2:10])
+
+y = ebay[,1]
+prior_cov = t(X)%*%X
+log_posterior_prob = function(beta, X, y){
+  log_like=0
+  for (i in 1:dim(X)[1]) {
+    lambda = exp(t(X[i,])%*%beta)
+    log_like = log_like +log(dpois(y[i], lambda = lambda))
+  }
+  
+    
+  prior_log_prob = log(dmvnorm(beta, mean = rep(0,nr_param), sigma = prior_cov))
+  tot_log_like = dim(X)[1]*prior_log_prob + log_like
+  return(tot_log_like)
+}
+
+log_faculty = function(y){
+  log_fac = 0
+  if (y != 0) {
+    for (i in 1:y) {
+      log_fac = log_fac + log(i) 
+    }
+  }
+  
+  return(log_fac) 
+}
+
+log_posterior_prob = function(beta, X, y){
+  log_like=0
+  for (i in 1:dim(X)[1]) {
+    x_b = t(X[i,])%*%beta
+    part = x_b*y[i]-exp(x_b)-log_faculty(y[i])
+    log_like = log_like + part
+  }
+  
+  
+  prior_log_prob = log(dmvnorm(beta, mean = rep(0,nr_param), sigma = prior_cov))
+  tot_log_like = dim(X)[1]*prior_log_prob + log_like
+  return(tot_log_like)
+}
+#startvalues for beta vector
+nr_param = dim(X)[2]
+init_beta = as.vector(rep(0,nr_param))
+result = optim(init_beta, log_posterior_prob, gr=NULL, X, y, method=c("BFGS"), control=list(fnscale=-1), hessian=TRUE)
+
+beta_hat = result$par
+j_y = -result$hessian
+post_cov = solve(j_y)
+
+beta_hat
+post_cov
+
+```
+
+### c
+
+Now, let’s simulate from the actual posterior of $\beta$ using the Metropolis algo- rithm and compare with the approximate results in b). Program a general function that uses the Metropolis algorithm to generate random draws from an arbitrary posterior density. In order to show that it is a general function for any model, I will denote the vector of model parameters by θ. Let the proposal density be the multivariate normal density mentioned in Lecture 8 (random walk Metropolis):
+$$\theta_p | \theta^{(i-1)}\sim\mathcal{N}(\theta^{(i-1)},c*\Sigma)$$
+where $\Sigma = J_y^{-1}(\tilde{\beta})$ obtained in b). The value c is a tuning parameter and
+should be an input to your Metropolis function. The user of your Metropo- lis function should be able to supply her own posterior density function, not necessarily for the Poisson regression, and still be able to use your Metropolis function. This is not so straightforward, unless you have come across function objects in R and the triple dot (...) wildcard argument. I have posted a note (HowToCodeRWM.pdf) on the course web page that describes how to do this in R.
+Now, use your new Metropolis function to sample from the posterior of β in the Poisson regression for the eBay dataset. Assess MCMC convergence by graphical methods.
+
+```{r 2c}
+#2c
+library(MASS)
+library(LaplacesDemon)
+
+proposal_generator = function(theta_prev, c, cov_mat){
+  theta_p = mvrnorm(1, theta_prev, c*cov_mat)
+  return(theta_p)
+}
+
+alpha_generator = function(proposal, theta_before, log_post_func, ...){
+  
+  new_prob = log_post_func(proposal,...)
+  old_prob = log_post_func(theta_before, ...)
+  
+  alpha = exp(new_prob - old_prob)
+  
+  return(min(alpha, 1))
+}
+
+metropolis = function(init_theta, c, nr_iter, cov_mat,log_post_func, ...){
+  
+  metrop_sim = matrix(data=1, nrow = nr_iter, ncol = length(init_theta))
+  metrop_sim[1,] = init_theta
+  
+  for (i in 2:nr_iter) {
+    proposal = proposal_generator(metrop_sim[i-1,],c,cov_mat);
+    
+    #calculate apha
+    alpha = alpha_generator(proposal, metrop_sim[i-1,],log_post_func, ...)
+    #accept the proposal with proability alpha
+    if( rbern(1, alpha)){
+      metrop_sim[i,] = proposal
+    }else{
+      metrop_sim[i,] = metrop_sim[i-1,]
+    }
+  }
+  return(metrop_sim)
+}
+init_theta = rep(0,length(beta_hat))
+c=1
+nr_iter=3000
+cov_mat = post_cov
+
+#proposal_generator(init_theta, c, cov_mat)
+metrop_samp = metropolis(init_theta, c, nr_iter, cov_mat,log_posterior_prob,X,y)
+
+hist(metrop_samp[,1])
+hist(metrop_samp[,2])
+hist(metrop_samp[,3])
+hist(metrop_samp[,4])
+hist(metrop_samp[,5])
+hist(metrop_samp[,6])
+hist(metrop_samp[,7])
+hist(metrop_samp[,8])
+hist(metrop_samp[,9])
+beta_hat
+
+#y1 = cumsum(metrop_samp[,1]) / seq_along(metrop_samp[,1]) 
+y1 = cumsum(metrop_samp[,1]) / 1:length(metrop_samp[,1]) 
+y2 = cumsum(metrop_samp[,2]) / 1:length(metrop_samp[,2])
+y3 = cumsum(metrop_samp[,3]) / 1:length(metrop_samp[,3])
+
+#convergence plotted with beta_hat, beta by optimization from maximum posterior liklehood. 
+plot(rep(beta_hat[1],length(metrop_samp[,1])), type="l", main="beta_1", ylim = c(0,1.2))
+lines(y1, type="l", col="blue")
+
+plot(rep(beta_hat[2],length(metrop_samp[,1])), type="l", main="beta_2", ylim = c(-0.12,0))
+lines(y2, type="l", col="blue")
+
+plot(rep(beta_hat[3],length(metrop_samp[,1])), type="l", main="beta_3",ylim = c(-0.4,0.2))
+lines(y3, type="l", col="blue")
+```
+
+### d
+
+Use the MCMC draws from c) to simulate from the predictive distribution of the number of bidders in a new auction with the characteristics below. Plot the predictive distribution. What is the probability of no bidders in this new auction?
+
+* PowerSeller = 1
+* VerifyID = 1
+* Sealed = 1
+* MinBlem = 0
+* MajBlem = 0
+* LargNeg = 0
+* LogBook = 1
+* MinBidShare = 0.5
+
+```{r 2d}
+# 2d
+x_new = c(1,1,1,1,0,0,0,1,0.5)
+
+x_b_pred = metrop_samp%*%x_new
+lambda = exp(x_b_pred)
+hist(exp(lambda))
+
+#poisson for all observed lambda to get y
+y_prob_0 = rep(0,nr_iter)
+
+for (i in 1:nr_iter) {
+  
+  y_prob_0[i] = dpois(0,lambda[i])
+  
+}  
+sum(y_prob_0)/nr_iter
+```
