@@ -69,3 +69,6 @@ fit_095 = stan(model_code=StanModel,data=data,
 print(fit_095,digits_summary=3) 
 
 #NOT THE TRUE VALUES, 
+
+#ii
+Rhat(fit_03[sim])
