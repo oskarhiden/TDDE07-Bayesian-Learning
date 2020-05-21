@@ -1,0 +1,71 @@
+
+# 1a
+mu = 10
+sigma2 = 2
+T_1 = 200
+x_1 = mu
+
+AR_process = function(mu, phi, simga2, x_1, T_1){
+  x = rep(0,T_1)
+  x[1] = x_1
+  
+  for (i in 2:T_1) {
+    error = rnorm(1,0,sigma2)
+    x[i] = mu+phi*(x[i-1]-mu)+error
+  }
+  return(x)
+}
+
+phi_1 = AR_process(mu, 1, simga2, x_1, T_1)
+phi_05 = AR_process(mu, 0.5, simga2, x_1, T_1)
+phi_0 = AR_process(mu, 0, simga2, x_1, T_1)
+phi_neg_05 = AR_process(mu, -0.5, simga2, x_1, T_1)
+phi_neg_1 = AR_process(mu, -1, simga2, x_1, T_1)
+
+plot(phi_1, type ="l")
+plot(phi_05, type="l")
+plot(phi_0, type="l")
+plot(phi_neg_05, type="l")
+plot(phi_neg_1, type="l")
+
+# Phi decides how the previous draw effects the next draw of x.Phi = 1 gives equlal weight to all previous error draws 
+# while Phi= 0.5 only careses about the moast preavious in declining order, exponential decrease. For negative values of Phi the 
+# previous deviation from mean is compensated in the other direction. Over mean then becomes under mean.
+
+
+#1b
+library(rstan)
+phi_03 = AR_process(mu, 0.3, simga2, x_1, T_1)
+phi_095 = AR_process(mu, 0.95, simga2, x_1, T_1)
+
+StanModel = '
+data{
+  int<lower=0> N;
+  vector[N] y;
+}
+parameters {
+  real mu;
+  real phi;
+  real<lower=0> sigma2;
+}
+model {
+  for (n in 2:N)
+    y[n] ~ normal(mu + phi * y[n-1], sqrt(sigma2));
+}
+'
+
+data = list(N=T_1, y=phi_03)
+burnin = 1000
+niter = 2000
+fit_03 = stan(model_code=StanModel,data=data,
+           warmup=burnin,iter=niter,chains=4)
+
+print(fit_03,digits_summary=3) 
+
+data = list(N=T_1, y=phi_095)
+fit_095 = stan(model_code=StanModel,data=data,
+              warmup=burnin,iter=niter,chains=4)
+
+print(fit_095,digits_summary=3) 
+
+#NOT THE TRUE VALUES, 
