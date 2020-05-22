@@ -71,4 +71,10 @@ print(fit_095,digits_summary=3)
 #NOT THE TRUE VALUES, 
 
 #ii
-Rhat(fit_03[sim])
+post_draws_03 = extract(fit_03)
+plot(post_draws_03$mu)
+plot(post_draws_03$phi)
+
+post_draws_095 = extract(fit_03)
+plot(post_draws_095$mu)
+plot(post_draws_095$phi)
