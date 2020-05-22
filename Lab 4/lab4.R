@@ -115,7 +115,7 @@ parameters {
 model {
   mu ~ normal(2,50); // Normal with mean 2(from log10), st.dev. 50
   sigma2 ~ scaled_inv_chi_square(1,2); // Scaled-inv-chi2 with nu 1, sigma 10
-  phi ~ normal(0.3, 5);
+  phi ~ uniform(-1, 1);
   for (n in 2:N){
     x[n] ~ normal(mu + phi * x[n-1], sqrt(sigma2));
     y[n] ~ poisson(exp(x[n]));
@@ -144,4 +144,41 @@ points(exp(high[4:(length(mean)-1)]), col="blue", type="l")
 
 
 # 1d
+
+StanModel_inform = '
+data{
+  int<lower=0> N;
+  int<lower=0> y[N];
+}
+parameters {
+  real mu;
+  real phi;
+  real<lower=0> sigma2;
+  real x[N];
+}
+model {
+  mu ~ normal(2,50); // Normal with mean 2(from log10), st.dev. 50
+  sigma2 ~ scaled_inv_chi_square(300,0.1); // Scaled-inv-chi2 with nu 1, sigma 10
+  phi ~ uniform(-1, 1);
+  for (n in 2:N){
+    x[n] ~ normal(mu + phi * x[n-1], sqrt(sigma2));
+    y[n] ~ poisson(exp(x[n]));
+  }
+}
+'
+
+fit_campy = stan(model_code=StanModel_inform,data=data,
+                 warmup=burnin,iter=niter,chains=4)
+
+print(fit_campy, digits_summary = 3)
+
+post_summary = summary(fit_campy)
+mean = post_summary$summary[,1]
+low = post_summary$summary[,4]
+high = post_summary$summary[,8]
+
+plot(campy)
+points(exp(mean[4:(length(mean)-1)]), col="red", type="l")
+points(exp(low[4:(length(mean)-1)]), col="blue", type="l")
+points(exp(high[4:(length(mean)-1)]), col="blue", type="l")
 
