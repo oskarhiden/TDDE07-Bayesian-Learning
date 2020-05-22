@@ -72,9 +72,20 @@ print(fit_095,digits_summary=3)
 
 #ii
 post_draws_03 = extract(fit_03)
-plot(post_draws_03$mu)
-plot(post_draws_03$phi)
+plot(post_draws_03$mu, type="l")
+plot(post_draws_03$phi, type="l")
 
-post_draws_095 = extract(fit_03)
-plot(post_draws_095$mu)
-plot(post_draws_095$phi)
+post_draws_095 = extract(fit_095)
+plot(post_draws_095$mu, type="l")
+plot(post_draws_095$phi, type="l")
+
+#convergence
+plot(cumsum(post_draws_03$mu) / 1:length(post_draws_03$mu), type="l")
+plot(cumsum(post_draws_03$phi) / 1:length(post_draws_03$phi), type="l")
+
+plot(cumsum(post_draws_095$mu) / 1:length(post_draws_095$mu), type="l")
+plot(cumsum(post_draws_095$phi) / 1:length(post_draws_095$phi), type="l")
+
+#joint posterior draws
+plot(post_draws_03$phi,post_draws_03$mu, type="p")
+plot(post_draws_095$phi,post_draws_095$mu, type="p")
