@@ -10,7 +10,7 @@ AR_process = function(mu, phi, simga2, x_1, T_1){
   x[1] = x_1
   
   for (i in 2:T_1) {
-    error = rnorm(1,0,sigma2)
+    error = rnorm(1,0,sqrt(sigma2))
     x[i] = mu+phi*(x[i-1]-mu)+error
   }
   return(x)
@@ -35,6 +35,7 @@ plot(phi_neg_1, type="l")
 
 #1b
 library(rstan)
+set.seed(12345)
 phi_03 = AR_process(mu, 0.3, simga2, x_1, T_1)
 phi_095 = AR_process(mu, 0.95, simga2, x_1, T_1)
 
@@ -54,21 +55,21 @@ model {
 }
 '
 
-data = list(N=T_1, y=phi_03)
+data_03 = list(N=T_1, y=phi_03)
 burnin = 1000
 niter = 2000
-fit_03 = stan(model_code=StanModel,data=data,
+fit_03 = stan(model_code=StanModel,data=data_03,
            warmup=burnin,iter=niter,chains=4)
 
 print(fit_03,digits_summary=3) 
 
-data = list(N=T_1, y=phi_095)
-fit_095 = stan(model_code=StanModel,data=data,
+data_095 = list(N=T_1, y=phi_095)
+fit_095 = stan(model_code=StanModel,data=data_095,
               warmup=burnin,iter=niter,chains=4)
 
 print(fit_095,digits_summary=3) 
 
-#NOT THE TRUE VALUES, 
+#not true values for mu, but phi and simga2 were able to predict. mu was futher from the real value when we use phi=0.95.
 
 #ii
 post_draws_03 = extract(fit_03)
@@ -86,6 +87,61 @@ plot(cumsum(post_draws_03$phi) / 1:length(post_draws_03$phi), type="l")
 plot(cumsum(post_draws_095$mu) / 1:length(post_draws_095$mu), type="l")
 plot(cumsum(post_draws_095$phi) / 1:length(post_draws_095$phi), type="l")
 
+#  All varibles seem to convergate but some thorwards the wrong value.
+
 #joint posterior draws
 plot(post_draws_03$phi,post_draws_03$mu, type="p")
 plot(post_draws_095$phi,post_draws_095$mu, type="p")
+
+# They seem to have a quite strong correlation.
+
+#1c
+
+campy = read.table("/Users/oskarhiden/Git/TDDE07 Bayesian Learning/Lab 4/campy.dat", header = TRUE)
+
+campy = as.list(campy)
+
+StanModel = '
+data{
+  int<lower=0> N;
+  int<lower=0> y[N];
+}
+parameters {
+  real mu;
+  real phi;
+  real<lower=0> sigma2;
+  real x[N];
+}
+model {
+  mu ~ normal(2,50); // Normal with mean 2(from log10), st.dev. 50
+  sigma2 ~ scaled_inv_chi_square(1,2); // Scaled-inv-chi2 with nu 1, sigma 10
+  phi ~ normal(0.3, 5);
+  for (n in 2:N){
+    x[n] ~ normal(mu + phi * x[n-1], sqrt(sigma2));
+    y[n] ~ poisson(exp(x[n]));
+  }
+}
+'
+T_2 = 140
+campy = campy$c
+data = list(N=T_2, y=campy)
+burnin = 1000
+niter = 2000
+fit_campy = stan(model_code=StanModel,data=data,
+              warmup=burnin,iter=niter,chains=4)
+
+print(fit_campy, digits_summary = 3)
+
+post_summary = summary(fit_campy)
+mean = post_summary$summary[,1]
+low = post_summary$summary[,4]
+high = post_summary$summary[,8]
+
+plot(campy)
+points(exp(mean[4:(length(mean)-1)]), col="red", type="l")
+points(exp(low[4:(length(mean)-1)]), col="blue", type="l")
+points(exp(high[4:(length(mean)-1)]), col="blue", type="l")
+
+
+# 1d
+
