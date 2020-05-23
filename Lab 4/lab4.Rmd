@@ -57,7 +57,7 @@ points(exp(high[4:(length(mean)-1)]), col="blue", type="l")
 ### D
 Now, assume that we have a prior belief that the true underlying intensity $\theta_t$ varies more smoothly than the data suggests. Change the prior for $\sigma^2$ so that it becomes informative about that the AR(1)-process increments $\epsilon_t$ should be small. Re-estimate the model using Stan with the new prior and produce the same plot as in c). Has the posterior for $\theta_t$ changed?
 
-```{r}
+```{}
 StanModel_inform = '
 data{
   int<lower=0> N;
